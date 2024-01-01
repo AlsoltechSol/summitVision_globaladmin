@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\PlanRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
@@ -29,15 +30,15 @@ class CompanyController extends Controller
         }
         // Validation
         $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50',
-            'mobile' => 'nullable|string|max:20',
-            'password' => 'nullable|string|max:255',
+            'name'      => 'required|string|max:50',
+            'email'     => 'required|email|max:50',
+            'mobile'    => 'nullable|string|max:20',
+            'password'  => 'required|string|max:255',
+            'url'       => 'required',
         ]);
 
         $hashedPassword = Hash::make($request->input('password'));
 
-        // Store the company with the hashed password
         $new_company = Company::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -45,10 +46,25 @@ class CompanyController extends Controller
             'password' => $hashedPassword,
             'url' => $request->url
         ]);
+        // $new_company = true;
+        if ($new_company) {
+            $response = Http::put($new_company->url . '/api/companies/0', [
+                'name' => $new_company->name,
+                'email' => $new_company->email,
+                'mobile' => $new_company->mobile,
+                'password' => $new_company->url,
+            ]);
 
-        // if($new_company){
-        //   $request_update = Http::post()
-        // }
+            $message = $response->json();
+
+            if ($response->successful()) {
+                return redirect()->back()->with('success', __('Company created, ' . $message['message']));
+            } else {
+                return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
+            }
+        } else {
+            return redirect()->back()->with('success', __('Faild to create Company.'));
+        }
 
         // Redirect or return a response as needed
         return redirect()->route('companies.index')->with('success', 'Company created successfully.');
@@ -94,15 +110,21 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        if (Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
         // Validation
         $request->validate([
             'name' => 'required|string|max:50',
             'email' => 'required|email|max:50',
             'mobile' => 'nullable|string|max:20',
             'password' => 'nullable|string|max:255',
+            'url' => 'required'
         ]);
 
-        // Find the company by ID
+        $hashedPassword = Hash::make($request->input('password'));
+
         $company = Company::findOrFail($id);
 
         // Update company attributes
@@ -110,21 +132,37 @@ class CompanyController extends Controller
         $company->email = $request->input('email');
         $company->mobile = $request->input('mobile');
 
-        // Check if a new password is provided
         if ($request->has('password')) {
-            // Encrypt and update the password
             $company->password = bcrypt($request->input('password'));
         }
         $company->url = $request->url;
-        // Save the changes
-        $company->save();
 
-        // Redirect or return a response as needed
-        return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
+        if ($company->save()) {
+            $response = Http::put($company->url . '/api/companies/0', [
+                'name' => $company->name,
+                'email' => $company->email,
+                'password' => $company->password,
+            ]);
+            $message = $response->json();
+            if ($response->successful()) {
+                return redirect()->back()->with('success', __('Company updated, ' . $message['message']));
+            } else {
+                return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . $message['message']));
+            }
+        } else {
+            return redirect()->back()->with('error', __('Failed to create company'));
+        }
     }
 
 
     public function destroy($id)
     {
+        try {
+            $company = Company::findOrFail($id);
+            $company->delete();
+            redirect()->back()->with('success', __('Company deleted successfully'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('Internal Server Error. Unable to delete the company.'));
+        }
     }
 }
