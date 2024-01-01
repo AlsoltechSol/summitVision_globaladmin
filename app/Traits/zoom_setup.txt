@@ -1,0 +1,18 @@
+go to zoom marketplace sign in 
+
+build app > server to server o auth > 
+
+take app cred (acc id, client_id, access_key) > 
+
+scopes > 
+
+ /information_barriers:read:admin
+ /information_barriers:write:admin
+ /meeting:master
+ /meeting:read:admin
+ /meeting:read:admin:sip_dialing
+ /meeting:write:admin
+
+ choose this options and activate the app 
+
+ then just place creads (acc id, client_id, access_key) in the company or admin 
