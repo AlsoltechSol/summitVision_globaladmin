@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web_Api;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Plan;
 use App\Models\Utility;
 use App\Models\PlanRequest;
 use App\Models\User;
 use File;
-use Illuminate\Http\Request;
 
 class PlanController extends Controller
 {
+    
     public function index()
     {
-        if (\Auth::user()->can('Manage Plan')) {
-            $plans                 = Plan::get();
-            $admin_payment_setting = Utility::getAdminPaymentSetting();
-            //  dd('sdfg');
-            return view('plan.index', compact('plans', 'admin_payment_setting'));
-        } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        $plans                 = Plan::get();
+        $admin_payment_setting = Utility::getAdminPaymentSetting();
+
+        return response()->json(['status' => 200, 'plans' => $plans, 'admin_payment_setting' => $admin_payment_setting]);
     }
 
 
@@ -60,11 +58,11 @@ class PlanController extends Controller
                 }
 
                 $post = $request->all();
-                
+
                 if (!isset($request->enable_chatgpt)) {
                     $post['enable_chatgpt'] = 'off';
                 }
-                
+
                 if (Plan::create($post)) {
                     return redirect()->back()->with('success', __('Plan Successfully created.'));
                 } else {
@@ -96,7 +94,7 @@ class PlanController extends Controller
     {
         if (\Auth::user()->can('Edit Plan')) {
             $admin_payment_setting = Utility::getAdminPaymentSetting();
-            if (!empty($admin_payment_setting) &&  ($admin_payment_setting['is_manually_enabled'] == 'on' || $admin_payment_setting['is_banktransfer_enabled'] == 'on' || $admin_payment_setting['is_stripe_enabled'] == 'on' || $admin_payment_setting['is_paypal_enabled'] == 'on' || $admin_payment_setting['is_paystack_enabled'] == 'on' || $admin_payment_setting['is_flutterwave_enabled'] == 'on' || $admin_payment_setting['is_razorpay_enabled'] == 'on' || $admin_payment_setting['is_mercado_enabled'] == 'on' || $admin_payment_setting['is_paytm_enabled'] == 'on' || $admin_payment_setting['is_mollie_enabled'] == 'on' || $admin_payment_setting['is_skrill_enabled'] == 'on' || $admin_payment_setting['is_coingate_enabled'] == 'on' || $admin_payment_setting['is_paymentwall_enabled'] == 'on' || $admin_payment_setting['is_toyyibpay_enabled'] == 'on' || $admin_payment_setting['is_payfast_enabled'] == 'on' || $admin_payment_setting['is_iyzipay_enabled'] == 'on' || $admin_payment_setting['is_sspay_enabled'] == 'on' || $admin_payment_setting['is_paytab_enabled'] == 'on' || $admin_payment_setting['is_benefit_enabled'] == 'on' || $admin_payment_setting['is_cashfree_enabled'] == 'on' || $admin_payment_setting['is_aamarpay_enabled'] == 'on'|| $admin_payment_setting['is_paytr_enabled'] == 'on')) {
+            if (!empty($admin_payment_setting) &&  ($admin_payment_setting['is_manually_enabled'] == 'on' || $admin_payment_setting['is_banktransfer_enabled'] == 'on' || $admin_payment_setting['is_stripe_enabled'] == 'on' || $admin_payment_setting['is_paypal_enabled'] == 'on' || $admin_payment_setting['is_paystack_enabled'] == 'on' || $admin_payment_setting['is_flutterwave_enabled'] == 'on' || $admin_payment_setting['is_razorpay_enabled'] == 'on' || $admin_payment_setting['is_mercado_enabled'] == 'on' || $admin_payment_setting['is_paytm_enabled'] == 'on' || $admin_payment_setting['is_mollie_enabled'] == 'on' || $admin_payment_setting['is_skrill_enabled'] == 'on' || $admin_payment_setting['is_coingate_enabled'] == 'on' || $admin_payment_setting['is_paymentwall_enabled'] == 'on' || $admin_payment_setting['is_toyyibpay_enabled'] == 'on' || $admin_payment_setting['is_payfast_enabled'] == 'on' || $admin_payment_setting['is_iyzipay_enabled'] == 'on' || $admin_payment_setting['is_sspay_enabled'] == 'on' || $admin_payment_setting['is_paytab_enabled'] == 'on' || $admin_payment_setting['is_benefit_enabled'] == 'on' || $admin_payment_setting['is_cashfree_enabled'] == 'on' || $admin_payment_setting['is_aamarpay_enabled'] == 'on' || $admin_payment_setting['is_paytr_enabled'] == 'on')) {
                 $plan = Plan::find($plan_id);
                 if (!empty($plan)) {
                     $validator = \Validator::make(

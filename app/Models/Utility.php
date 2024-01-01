@@ -830,10 +830,10 @@ class Utility extends Model
         $data     = \DB::table('admin_payment_settings');
 
         $settings = [];
-        if (\Auth::check()) {
+        // if (\Auth::check()) {
             $user_id = 1;
             $data    = $data->where('created_by', '=', $user_id);
-        }
+        // }
         $data = $data->get();
         foreach ($data as $row) {
             $settings[$row->name] = $row->value;

@@ -91,9 +91,7 @@
                                      <a href="{{ route('companies.show', $company->id) }}" class="btn btn-sm btn-primary">
                                           <i class="ti ti-eye"></i>
                                      </a>
-                                     <a href="{{ route('notifications.show', $company->id) }}" class="btn btn-sm btn-primary">
-                                          <i class="ti ti-message"></i>
-                                     </a>
+                                     
                                     </td>
                                 </tr>
                             @endforeach

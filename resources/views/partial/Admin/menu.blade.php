@@ -100,8 +100,8 @@
 
             <!-- user-->
             @if (\Auth::user()->type == 'super admin')
-                <li class="dash-item">
-                    <a href="{{ route('user.index') }}" class="dash-link"><span class="dash-micon"><i
+                <li class="dash-item {{ str_contains(url()->current(), 'companies') ? 'active' : '' }}">
+                    <a href="{{ route('companies.index') }}" class="dash-link"><span class="dash-micon"><i
                                 class="ti ti-user"></i></span><span class="dash-mtext">{{ __('Companies') }}</span></a>
                 </li>
             @else
