@@ -14,19 +14,18 @@
             </div>
         </div>
 
-        @if (\Auth::user()->type != 'super admin')
-            <div class="form-group ">
-                {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
-                <div class="form-icon-user">
-                    {!! Form::select('role', $roles, $user->roles, ['class' => 'form-control select2 ', 'required' => 'required']) !!}
-                </div>
-                @error('role')
-                    <span class="invalid-role" role="alert">
-                        <strong class="text-danger">{{ $message }}</strong>
-                    </span>
-                @enderror
+        <div class="form-group ">
+            {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::select('role', $roles, $user->roles, ['class' => 'form-control select2 ', 'required' => 'required']) !!}
             </div>
-        @endif
+            @error('role')
+                <span class="invalid-role" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </span>
+            @enderror
+        </div>
+        
     </div>
 </div>
 <div class="modal-footer">

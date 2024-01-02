@@ -1161,25 +1161,25 @@ class UsersTableSeeder extends Seeder
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
             [
-                "name" => 'manage coupon',
+                "name" => 'Manage Coupon',
                 "guard_name" => "web",
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
             [
-                "name" => 'create coupon',
+                "name" => 'Create Coupon',
                 "guard_name" => "web",
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
             [
-                "name" => 'edit coupon',
+                "name" => 'Edit Coupon',
                 "guard_name" => "web",
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
             [
-                "name" => 'delete coupon',
+                "name" => 'Delete Coupon',
                 "guard_name" => "web",
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
@@ -1832,7 +1832,36 @@ class UsersTableSeeder extends Seeder
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
-
+            [
+                "name" => "Manage Landing Page",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
+            [
+                "name" => "Manage Settings",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
+            [
+                "name" => "Manage Email Templates",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
+            [
+                "name" => "Manage Companies",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
+            [
+                "name" => "Create Companies",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
         ];
         Permission::insert($arrPermissions);
 
@@ -1844,6 +1873,10 @@ class UsersTableSeeder extends Seeder
             ]
         );
         $superAdminPermissions = [
+            ["name" => "Manage Companies"],
+            ["name" => "Manage Email Templates"],
+            ["name" => "Manage Landing Page"],
+            ["name" => "Manage Settings"],
             ["name" => "Manage User"],
             ["name" => "Create User"],
             ["name" => "Edit User"],

@@ -40,139 +40,141 @@ class HomeController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->type == 'employee') {
-                $emp = Employee::where('user_id', '=', $user->id)->first();
+            // if ($user->type == 'employee') {
+            //     $emp = Employee::where('user_id', '=', $user->id)->first();
 
-                $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->leftjoin('announcement_employees', 'announcements.id', '=', 'announcement_employees.announcement_id')->where('announcement_employees.employee_id', '=', $emp->id)->orWhere(
-                    function ($q) {
-                        $q->where('announcements.department_id', 0)->where('announcements.employee_id', 0);
-                    }
-                )->get();
+            //     $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->leftjoin('announcement_employees', 'announcements.id', '=', 'announcement_employees.announcement_id')->where('announcement_employees.employee_id', '=', $emp->id)->orWhere(
+            //         function ($q) {
+            //             $q->where('announcements.department_id', 0)->where('announcements.employee_id', 0);
+            //         }
+            //     )->get();
 
-                $employees = Employee::get();
-                $meetings  = Meeting::orderBy('meetings.id', 'desc')->take(5)->leftjoin('meeting_employees', 'meetings.id', '=', 'meeting_employees.meeting_id')->where('meeting_employees.employee_id', '=', $emp->id)->orWhere(
-                    function ($q) {
-                        $q->where('meetings.department_id', 0)->where('meetings.employee_id', 0);
-                    }
-                )->get();
-                $events    = Event::select('events.*', 'events.id as event_id', 'event_employees.*')->leftjoin('event_employees', 'events.id', '=', 'event_employees.event_id')->where('event_employees.employee_id', '=', $emp->id)->orWhere(
-                    function ($q) {
-                        $q->where('events.department_id', 0)->where('events.employee_id', 0);
-                    }
-                )->get();
-                $arrEvents = [];
+            //     $employees = Employee::get();
+            //     $meetings  = Meeting::orderBy('meetings.id', 'desc')->take(5)->leftjoin('meeting_employees', 'meetings.id', '=', 'meeting_employees.meeting_id')->where('meeting_employees.employee_id', '=', $emp->id)->orWhere(
+            //         function ($q) {
+            //             $q->where('meetings.department_id', 0)->where('meetings.employee_id', 0);
+            //         }
+            //     )->get();
+            //     $events    = Event::select('events.*', 'events.id as event_id', 'event_employees.*')->leftjoin('event_employees', 'events.id', '=', 'event_employees.event_id')->where('event_employees.employee_id', '=', $emp->id)->orWhere(
+            //         function ($q) {
+            //             $q->where('events.department_id', 0)->where('events.employee_id', 0);
+            //         }
+            //     )->get();
+            //     $arrEvents = [];
 
-                foreach ($events as $event) {
+            //     foreach ($events as $event) {
 
-                    $arr['id']              = $event['event_id'];
-                    $arr['title']           = $event['title'];
-                    $arr['start']           = $event['start_date'];
-                    $arr['end']             = $event['end_date'];
-                    $arr['className']       = $event['color'];
-                    // $arr['borderColor']     = "#fff";
-                    $arr['url']             = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
-                    //  $arr['url']                = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
+            //         $arr['id']              = $event['event_id'];
+            //         $arr['title']           = $event['title'];
+            //         $arr['start']           = $event['start_date'];
+            //         $arr['end']             = $event['end_date'];
+            //         $arr['className']       = $event['color'];
+            //         // $arr['borderColor']     = "#fff";
+            //         $arr['url']             = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
+            //         //  $arr['url']                = (!empty($event['event_id'])) ? route('eventsshow', $event['event_id']) : '0';
 
-                    // $arr['textColor']       = "white";
-                    $arrEvents[]            = $arr;
-                }
+            //         // $arr['textColor']       = "white";
+            //         $arrEvents[]            = $arr;
+            //     }
 
-                $date               = date("Y-m-d");
-                $time               = date("H:i:s");
-                $employeeAttendance = AttendanceEmployee::orderBy('id', 'desc')->where('employee_id', '=', !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : 0)->where('date', '=', $date)->first();
+            //     $date               = date("Y-m-d");
+            //     $time               = date("H:i:s");
+            //     $employeeAttendance = AttendanceEmployee::orderBy('id', 'desc')->where('employee_id', '=', !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : 0)->where('date', '=', $date)->first();
 
-                $officeTime['startTime'] = Utility::getValByName('company_start_time');
-                $officeTime['endTime']   = Utility::getValByName('company_end_time');
+            //     $officeTime['startTime'] = Utility::getValByName('company_start_time');
+            //     $officeTime['endTime']   = Utility::getValByName('company_end_time');
 
-                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
-            } else if ($user->type == 'super admin') {
-                $user                       = \Auth::user();
-                $user['total_user']         = $user->countCompany();
-                $user['total_paid_user']    = $user->countPaidCompany();
-                $user['total_orders']       = Order::total_orders();
-                $user['total_orders_price'] = Order::total_orders_price();
-                $user['total_plan']         = Plan::total_plan();
-                $user['most_purchese_plan'] = (!empty(Plan::most_purchese_plan()) ? Plan::most_purchese_plan()->name : '');
+            //     return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
+            // } else if ($user->type == 'super admin') {
+            $user                       = \Auth::user();
+            $user['total_user']         = $user->countCompany();
+            $user['total_paid_user']    = $user->countPaidCompany();
+            $user['total_orders']       = Order::total_orders();
+            $user['total_orders_price'] = Order::total_orders_price();
+            $user['total_plan']         = Plan::total_plan();
+            $user['most_purchese_plan'] = (!empty(Plan::most_purchese_plan()) ? Plan::most_purchese_plan()->name : '');
 
-                $chartData = $this->getOrderChart(['duration' => 'week']);
+            $chartData = $this->getOrderChart(['duration' => 'week']);
 
-                return view('dashboard.super_admin', compact('user', 'chartData'));
-            } else {
+            return view('dashboard.super_admin', compact('user', 'chartData'));
+            //     } else {
 
-                $events    = Event::where('created_by', '=', \Auth::user()->creatorId())->get();
-                $arrEvents = [];
+            //         $events    = Event::where('created_by', '=', \Auth::user()->creatorId())->get();
+            //         $arrEvents = [];
 
-                foreach ($events as $event) {
-                    $arr['id']    = $event['id'];
-                    $arr['title'] = $event['title'];
-                    $arr['start'] = $event['start_date'];
-                    $arr['end']   = $event['end_date'];
+            //         foreach ($events as $event) {
+            //             $arr['id']    = $event['id'];
+            //             $arr['title'] = $event['title'];
+            //             $arr['start'] = $event['start_date'];
+            //             $arr['end']   = $event['end_date'];
 
-                    $arr['className'] = $event['color'];
+            //             $arr['className'] = $event['color'];
 
-                    // $arr['borderColor']     = "#fff";
-                    // $arr['textColor']       = "white";
-                    $arr['url']             = route('event.edit', $event['id']);
+            //             // $arr['borderColor']     = "#fff";
+            //             // $arr['textColor']       = "white";
+            //             $arr['url']             = route('event.edit', $event['id']);
 
-                    $arrEvents[] = $arr;
-                }
-
-
-                $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->where('created_by', '=', \Auth::user()->creatorId())->get();
+            //             $arrEvents[] = $arr;
+            //         }
 
 
-                $emp           = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
-                $countEmployee = count($emp);
+            //         $announcements = Announcement::orderBy('announcements.id', 'desc')->take(5)->where('created_by', '=', \Auth::user()->creatorId())->get();
 
-                $user      = User::where('type', '!=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
-                $countUser = count($user);
-                $countTicket      = Ticket::where('created_by', '=', \Auth::user()->creatorId())->count();
-                $countOpenTicket  = Ticket::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
-                $countCloseTicket = Ticket::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
-                $currentDate = date('Y-m-d');
+            //         $emp           = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
+            //         $countEmployee = count($emp);
 
-                $employees     = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
-                $countEmployee = count($employees);
-                $notClockIn    = AttendanceEmployee::where('date', '=', $currentDate)->get()->pluck('employee_id');
+            //         $user      = User::where('type', '!=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
+            //         $countUser = count($user);
+            //         $countTicket      = Ticket::where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $countOpenTicket  = Ticket::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $countCloseTicket = Ticket::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
-                $notClockIns = Employee::where('created_by', '=', \Auth::user()->creatorId())->whereNotIn('id', $notClockIn)->get();
+            //         $currentDate = date('Y-m-d');
 
-                $accountBalance = AccountList::where('created_by', '=', \Auth::user()->creatorId())->sum('initial_balance');
-                $activeJob   = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
-                $inActiveJOb = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $employees     = User::where('type', '=', 'employee')->where('created_by', '=', \Auth::user()->creatorId())->get();
+            //         $countEmployee = count($employees);
+            //         $notClockIn    = AttendanceEmployee::where('date', '=', $currentDate)->get()->pluck('employee_id');
 
-                $totalPayee = Payees::where('created_by', '=', \Auth::user()->creatorId())->count();
-                $totalPayer = Payer::where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $notClockIns = Employee::where('created_by', '=', \Auth::user()->creatorId())->whereNotIn('id', $notClockIn)->get();
 
-                $meetings = Meeting::where('created_by', '=', \Auth::user()->creatorId())->limit(8)->get();
+            //         $accountBalance = AccountList::where('created_by', '=', \Auth::user()->creatorId())->sum('initial_balance');
+            //         $activeJob   = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $inActiveJOb = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
-                $users = User::find(\Auth::user()->creatorId());
-                $plan = Plan::find($users->plan);
-                if ($plan->storage_limit > 0) {
-                    $storage_limit = ($users->storage_limit / $plan->storage_limit) * 100;
-                } else {
-                    $storage_limit = 0;
-                }
+            //         $totalPayee = Payees::where('created_by', '=', \Auth::user()->creatorId())->count();
+            //         $totalPayer = Payer::where('created_by', '=', \Auth::user()->creatorId())->count();
 
-                return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'activeJob', 'inActiveJOb', 'meetings', 'countEmployee', 'countUser', 'countTicket', 'countOpenTicket', 'countCloseTicket', 'notClockIns', 'countEmployee', 'accountBalance', 'totalPayee', 'totalPayer', 'users', 'plan', 'storage_limit'));
-            }
-        } else {
-            if (!file_exists(storage_path() . "/installed")) {
-                header('location:install');
-                die;
-            } else {
-                return redirect('login');
-                // $settings = Utility::settings();
-                // if ($settings['display_landing_page'] == 'on' && \Schema::hasTable('landing_page_settings')) {
-                //     $plans = Plan::get();
-                //     $get_section = LandingPageSection::orderBy('section_order', 'ASC')->get();
+            //         $meetings = Meeting::where('created_by', '=', \Auth::user()->creatorId())->limit(8)->get();
 
-                //     return view('landingpage::layouts.landingpage', compact('plans', 'get_section'));
-                // } else {
-                //     return redirect('login');
-                // }
-            }
+            //         $users = User::find(\Auth::user()->creatorId());
+            //         $plan = Plan::find($users->plan);
+            //         if ($plan->storage_limit > 0) {
+            //             $storage_limit = ($users->storage_limit / $plan->storage_limit) * 100;
+            //         } else {
+            //             $storage_limit = 0;
+            //         }
+
+            //         return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'activeJob', 'inActiveJOb', 'meetings', 'countEmployee', 'countUser', 'countTicket', 'countOpenTicket', 'countCloseTicket', 'notClockIns', 'countEmployee', 'accountBalance', 'totalPayee', 'totalPayer', 'users', 'plan', 'storage_limit'));
+            //     }
+            // } else {
+            //     if (!file_exists(storage_path() . "/installed")) {
+            //         header('location:install');
+            //         die;
+            //     } else {
+            //         return redirect('login');
+            //         // $settings = Utility::settings();
+            //         // if ($settings['display_landing_page'] == 'on' && \Schema::hasTable('landing_page_settings')) {
+            //         //     $plans = Plan::get();
+            //         //     $get_section = LandingPageSection::orderBy('section_order', 'ASC')->get();
+
+            //         //     return view('landingpage::layouts.landingpage', compact('plans', 'get_section'));
+            //         // } else {
+            //         //     return redirect('login');
+            //         // }
+            //     }
+        }else{
+            return redirect('login'); 
         }
     }
 

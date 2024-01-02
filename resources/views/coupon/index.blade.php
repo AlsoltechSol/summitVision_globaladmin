@@ -33,7 +33,7 @@
 @endsection
 
 @section('action-button')
-    @can('create coupon')
+    @can('Create Coupon')
         <a href="#" data-url="{{ route('coupons.create') }}" data-ajax-popup="true"
             data-title="{{ __('Create New Coupon') }}" data-bs-toggle="tooltip" title="" class="btn btn-sm btn-primary"
             data-bs-original-title="{{ __('Create') }}">
@@ -88,7 +88,7 @@
                                                     <i class="ti ti-eye text-white"></i>
                                                 </a>
                                             </div>
-                                            @can('edit coupon')
+                                            @can('Edit Coupon')
                                                 <div class="action-btn bg-info ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center"
                                                         data-url="{{ route('coupons.edit', $coupon->id) }}"
@@ -99,7 +99,7 @@
                                                     </a>
                                                 </div>
                                             @endcan
-                                            @can('delete coupon')
+                                            @can('Delete Coupon')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['coupons.destroy', $coupon->id], 'id' => 'delete-form-' . $coupon->id]) !!}
                                                     <a href="#!" class="mx-3 btn btn-sm  align-items-center bs-pass-para"

@@ -18,30 +18,14 @@
 @endsection
 
 @section('action-button')
-    @if (Gate::check('Manage Employee Last Login'))
-        @can('Manage Employee Last Login')
-            <a href="{{ route('lastlogin') }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top"
-                title="{{ __('User Logs History') }}"><i class="ti ti-user-check"></i>
-            </a>
-        @endcan
-    @endif
-
-    @can('Create User')
-        @if (\Auth::user()->type == 'super admin')
+ 
+        @if (\Auth::user()->type == 'super admin' || Gate::check('Create Companies'))
             <a href="#" data-url="{{ route('companies.create') }}" data-ajax-popup="true"
                 data-title="{{ __('Create New Company') }}" data-size="md" data-bs-toggle="tooltip" title=""
                 class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create') }}">
                 <i class="ti ti-plus"></i>
             </a>
-        {{-- @else
-            <a href="#" data-url="{{ route('user.create') }}" data-ajax-popup="true"
-                data-title="{{ __('Create New User') }}" data-bs-toggle="tooltip" title="" class="btn btn-sm btn-primary"
-                data-bs-original-title="{{ __('Create') }}">
-                <i class="ti ti-plus"></i>
-            </a>--}}
         @endif 
-    @endcan
-
 
 @endsection
 

@@ -19,7 +19,7 @@
                 {!! Form::password('password', ['class' => 'form-control', 'required' => 'required','placeholder'=>'Enter password']) !!}
             </div>
         </div>
-        @if (\Auth::user()->type != 'super admin')
+        
             <div class="form-group">
                 {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
                 <div class="form-icon-user">
@@ -31,7 +31,7 @@
                     </span>
                 @enderror
             </div>
-        @endif
+      
     </div>
 </div>
 <div class="modal-footer">

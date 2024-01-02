@@ -31,12 +31,12 @@ class UserController extends Controller
         if (\Auth::user()->can('Manage User')) {
             $user = \Auth::user();
             if (\Auth::user()->type == 'super admin') {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'company')->get();
+                $users = User::where('created_by', '=', $user->creatorId())->get();
                 $CountUser = User::where('created_by')->get();
             } else {
                 $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'employee')->get();
             }
-
+            // dd($users);
             return view('user.index', compact('users'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -80,12 +80,14 @@ class UserController extends Controller
 
             if (\Auth::user()->type == 'super admin') {
                 $date = date("Y-m-d H:i:s");
+                // dd($request);
+                $role_r = Role::findById($request['role']);
                 $user = User::create(
                     [
                         'name' => $request['name'],
                         'email' => $request['email'],
                         'password' => Hash::make($request['password']),
-                        'type' => 'company',
+                        'type' => $role_r->name,
                         'plan' => $plan = Plan::where('price', '<=', 0)->first()->id,
                         'lang' => !empty($default_language) ? $default_language->value : 'en',
                         'created_by' => \Auth::user()->id,
@@ -93,7 +95,7 @@ class UserController extends Controller
                     ]
                 );
 
-                $user->assignRole('Company');
+                $user->assignRole($role_r);
                 $user->userDefaultData();
                 $user->userDefaultDataRegister($user->id);
                 GenerateOfferLetter::defaultOfferLetterRegister($user->id);
@@ -101,7 +103,7 @@ class UserController extends Controller
                 JoiningLetter::defaultJoiningLetterRegister($user->id);
                 NOC::defaultNocCertificateRegister($user->id);
                 Utility::jobStage($user->id);
-                $role_r = Role::findById(2);
+                // $role_r = Role::findById(2);
 
                 //create company default roles
                 Utility::MakeRole($user->id);
@@ -111,7 +113,7 @@ class UserController extends Controller
                 $total_user = $objUser->countUsers();
                 $plan       = Plan::find($objUser->plan);
 
-                if ($total_user < $plan->max_users || $plan->max_users == -1) {
+                // if ($total_user < $plan->max_users || $plan->max_users == -1) {
 
                     $role_r = Role::findById($request->role);
                     $date = date("Y-m-d H:i:s");
@@ -127,9 +129,9 @@ class UserController extends Controller
                         ]
                     );
                     $user->assignRole($role_r);
-                } else {
-                    return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
-                }
+                // } else {
+                //     return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
+                // }
             }
 
             $setings = Utility::settings();
