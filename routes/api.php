@@ -3,6 +3,7 @@
 use App\Http\Controllers\Web_Api\PlanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web_Api\LandingPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 Route::resource('plans', PlanController::class);
+Route::resource('landing_page_data', LandingPageController::class);
