@@ -18,25 +18,16 @@ class StripePaymentController extends Controller
     public function index()
     {
         $objUser = \Auth::user();
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || Gate::check('Manage Order')) {
             $orders  = Order::select(
                 [
                     'orders.*',
-                    'users.name as user_name',
+                    'companies.name as user_name',
                 ]
-            )->join('users', 'orders.user_id', '=', 'users.id')->orderBy('orders.created_at', 'DESC')->get();
+            )->join('companies', 'orders.company_id', '=', 'companies.id')->orderBy('orders.created_at', 'DESC')->get();
 
             return view('order.index', compact('orders'));
-        } elseif (\Auth::user()->type == 'company') {
-            $objUser = \Auth::user();
-            $orders  = Order::select(
-                [
-                    'orders.*',
-                    'users.name as user_name',
-                ]
-            )->join('users', 'orders.user_id', '=', 'users.id')->where('user_id', $objUser->id)->orderBy('orders.created_at', 'DESC')->get();
 
-            return view('order.index', compact('orders'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

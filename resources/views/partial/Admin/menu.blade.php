@@ -616,7 +616,7 @@
 
             @endif
 
-            @if (\Auth::user()->type == 'super admin')
+            @if (\Auth::user()->type == 'super admin' || Gate::check('Manage Plan Request'))
                 <li class="dash-item ">
                     <a href="{{ route('plan_request.index') }}" class="dash-link"><span
                             class="dash-micon"><i class="ti ti-arrow-down-right-circle"></i></span><span
@@ -637,7 +637,7 @@
                     </li>
               
             @endif
-            {{-- @if (\Auth::user()->type == 'super admin')
+            @if (\Auth::user()->type == 'super admin' || Gate::check('Manage Order'))
                 
                 <li class="dash-item ">
                     <a href="{{ route('order.index') }}"
@@ -647,7 +647,7 @@
 
                 </li>
                
-            @endif --}}
+            @endif
 
             @if (\Auth::user()->type == 'super admin' || Gate::check('Manage Email Templates'))
                 <li

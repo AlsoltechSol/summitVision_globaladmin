@@ -1862,6 +1862,12 @@ class UsersTableSeeder extends Seeder
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ],
+            [
+                "name" => "Manage Plan Request",
+                "guard_name" => "web",
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ],
         ];
         Permission::insert($arrPermissions);
 
@@ -1873,6 +1879,7 @@ class UsersTableSeeder extends Seeder
             ]
         );
         $superAdminPermissions = [
+            ["name" => "Manage Plan Request"],
             ["name" => "Manage Companies"],
             ["name" => "Manage Email Templates"],
             ["name" => "Manage Landing Page"],

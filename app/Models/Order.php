@@ -22,6 +22,7 @@ class Order extends Model
         'receipt',
         'payment_type',
         'user_id',
+        'company_id',
     ];
 
     public static function total_orders()
