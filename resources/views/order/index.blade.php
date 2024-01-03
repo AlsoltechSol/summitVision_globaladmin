@@ -25,6 +25,7 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('Order Id') }}</th>
+                                    <th>{{ __('Company ID')}}</th>
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Plan Name') }}</th>
                                     <th>{{ __('Price') }}</th>
@@ -40,6 +41,7 @@
                                 @foreach ($orders as $order)
                                     <tr>
                                         <td>{{ $order->order_id }}</td>
+                                        <td>{{ $order->company_id }}</td>
                                         <td>{{ $order->user_name }}</td>
                                         <td>{{ $order->plan_name }}</td>
                                         <td>{{ (!empty(env('CURRENCY_SYMBOL')) ? env('CURRENCY_SYMBOL') : '$') . $order->price }}
@@ -57,9 +59,9 @@
                                         <td>{{ !empty($order->total_coupon_used) ? (!empty($order->total_coupon_used->coupon_detail) ? $order->total_coupon_used->coupon_detail->code : '-') : '-' }}
                                         </td>
                                         <td>{{ $order->payment_type }}</td>
-                                        <td class="Id text-center">
+                                        <td class="text-center Id">
                                             @if (!empty($order->receipt && !empty($order->payment_type == 'STRIPE')))
-                                                <a href="{{ $order->receipt }}" class="btn  btn-outline-primary"
+                                                <a href="{{ $order->receipt }}" class="btn btn-outline-primary"
                                                     target="_blank"><i class="fas fa-file-invoice"></i></a>
                                             @elseif(!empty($order->receipt && !empty($order->payment_type == 'Bank Transfer')))
                                                 <a href="{{ $file . '' . $order->receipt }}"
@@ -73,25 +75,25 @@
                                             @if (\Auth::user()->type == 'super admin')
                                                 @if ($order->payment_status == 'Pending' && $order->payment_type == 'Bank Transfer')
                                                     <div class="action-btn bg-success ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                        <a href="#" class="mx-3 btn btn-sm align-items-center"
                                                             data-size="lg"
                                                             data-url="{{ URL::to('order/' . $order->id . '/action') }}"
                                                             data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
                                                             title="" data-title="{{ __('Order Action') }}"
                                                             data-bs-original-title="{{ __('Manage Order') }}">
-                                                            <i class="ti ti-caret-right text-white"></i>
+                                                            <i class="text-white ti ti-caret-right"></i>
                                                         </a>
                                                     </div>
                                                 @endif
                                             @elseif(\Auth::user()->type == 'company' && $order->payment_type == 'Bank Transfer')
                                                 <div class="action-btn bg-success ms-2">
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                    <a href="#" class="mx-3 btn btn-sm align-items-center"
                                                         data-size="lg"
                                                         data-url="{{ URL::to('order/' . $order->id . '/action') }}"
                                                         data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
                                                         title="" data-title="{{ __('Manage Order') }}"
                                                         data-bs-original-title="{{ __('Manage Order') }}">
-                                                        <i class="ti ti-caret-right text-white"></i>
+                                                        <i class="text-white ti ti-caret-right"></i>
                                                     </a>
                                                 </div>
                                             @else
@@ -105,10 +107,10 @@
                                                         'id' => 'delete-form-' . $order->id,
                                                     ]) !!}
                                                     <a href="#"
-                                                        class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                        class="mx-3 btn btn-sm align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title=""
                                                         data-bs-original-title="Delete" aria-label="Delete"><i
-                                                            class="ti ti-trash text-white text-white"></i></a>
+                                                            class="text-white ti ti-trash"></i></a>
                                                     </form>
                                                 </div>
                                             @endif

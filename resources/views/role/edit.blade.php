@@ -20,7 +20,7 @@
         <div class="form-group">
             @if (!empty($permissions))
                 <h6 class="my-3">{{ __('Assign Permission to Roles') }} </h6>
-                <table class="table  mb-0" id="dataTable-1">
+                <table class="table mb-0" id="dataTable-1">
                     <thead>
                         <tr>
                             <th>
@@ -38,6 +38,7 @@
                                 'User',
                                 'Role',
                                 'Plan',
+                                'Plan Request',
                                 'Coupon',
                                 'Email Templates',
                                 'Landing Page',
@@ -49,7 +50,7 @@
                         @endphp
                         @foreach ($modules as $module)
                             <tr>
-                                <td><input type="checkbox" class="align-middle ischeck  form-check-input"
+                                <td><input type="checkbox" class="align-middle ischeck form-check-input"
                                         name="checkall" data-id="{{ str_replace(' ', '', $module) }}"></td>
                                 <td><label class="ischeck"
                                         data-id="{{ str_replace(' ', '', $module) }}">{{ ucfirst($module) }}</label>
@@ -149,8 +150,8 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-    <input type="submit" value="{{ __('Update') }}" class="btn  btn-primary">
+    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+    <input type="submit" value="{{ __('Update') }}" class="btn btn-primary">
 </div>
 {{ Form::close() }}
 

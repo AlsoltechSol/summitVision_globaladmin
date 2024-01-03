@@ -10,6 +10,7 @@ class PlanRequest extends Model
         'user_id',
         'plan_id',
         'duration',
+        'company_id',
     ];
 
     public function plan()
@@ -19,6 +20,6 @@ class PlanRequest extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->hasOne('App\Models\Company', 'id', 'company_id');
     }
 }

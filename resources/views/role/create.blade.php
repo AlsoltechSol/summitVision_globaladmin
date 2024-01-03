@@ -17,7 +17,7 @@
             <div class="form-group">
                 @if (!empty($permissions))
                     <h6 class="my-3">{{ __('Assign Permission to Roles') }} </h6>
-                    <table class="table  mb-0" id="dataTable-1">
+                    <table class="table mb-0" id="dataTable-1">
                         <thead>
                             <tr>
                                 <th>
@@ -36,6 +36,7 @@
                                     'User',
                                     'Role',
                                     'Plan',
+                                    'Plan Request',
                                     'Coupon',
                                     'Email Templates',
                                     'Landing Page',
@@ -147,8 +148,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn  btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-        <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+        <input type="submit" value="{{ __('Create') }}" class="btn btn-primary">
     </div>
     {{ Form::close() }}
 

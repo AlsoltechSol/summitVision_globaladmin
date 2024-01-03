@@ -53,6 +53,7 @@ class CompanyController extends Controller
                 'email' => $new_company->email,
                 'mobile' => $new_company->mobile,
                 'password' => $new_company->url,
+                'company_id' => $new_company->id,
             ]);
 
             $message = $response->json();
@@ -142,6 +143,7 @@ class CompanyController extends Controller
                 'name' => $company->name,
                 'email' => $company->email,
                 'password' => $company->password,
+                'company_id' => $company->id,
             ]);
             $message = $response->json();
             if ($response->successful()) {
