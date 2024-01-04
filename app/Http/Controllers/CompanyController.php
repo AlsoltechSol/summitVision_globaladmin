@@ -76,26 +76,43 @@ class CompanyController extends Controller
         if (Auth::user()->type != 'super admin') {
             return redirect()->back()->with('error', __('Access denied.'));
         }
-        $company = Company::findOrFail($id);
+        // $company = Company::findOrFail($id);
 
-        $companyInfo = Company::leftJoin('plan_requests', 'companies.id', '=', 'plan_requests.company_id')
-            ->leftJoin('subscription_plans', 'plan_requests.subs_plan_id', '=', 'subscription_plans.id')
-            ->select(
-                'plan_requests.start_date',
-                'plan_requests.transaction_id',
-                'plan_requests.end_date',
-                'plan_requests.status',
-                'plan_requests.status as request_status',
-                'subscription_plans.plan',
-                'subscription_plans.total_users',
-                'subscription_plans.duration',
-                'subscription_plans.price'
-            )
-            ->where('companies.id', $id)
-            ->orderByRaw("FIELD(plan_requests.status,  'active', 'pending', 'hold', 'expired', 'rejected')")
-            ->get();
+        
         // dd($companyInfo);
         return view('companies.show', compact('companyInfo', 'company'));
+    }
+
+    public function company_settings($id)
+    {
+        if (Auth::user()->type != 'super admin') {
+            return redirect()->back()->with('error', __('Access denied.'));
+        }
+        $company = Company::findOrFail($id);
+
+        
+        // dd($companyInfo);
+        return view('companies.company_settings', compact('company'));
+    }
+
+    public function company_storage_setting_store(Request $request, $company){
+        // dd($company);
+
+       $company = Company::find($company);
+       if (!$company) {
+        return redirect()->back()->with('error', __('Company Not Found.'));
+       }
+       $response = Http::post($company->url . '/api/storage-settings', $request);
+
+       $response = $response->json();
+
+       if ($response['status'] == 200) {
+            
+        return redirect()->back()->with('success', __($response['message']));
+       } else {
+        return redirect()->back()->with('error', __($response['message']));
+       }
+       
     }
 
     public function edit($id)

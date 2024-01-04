@@ -18,18 +18,17 @@ class BankTransferController extends Controller
     {
 
         try {
-
+           
 
             $plan = $request->plan;
-            $data = null;
+            $tempFilePath = null;
 
-            if (preg_match('/^data:image\/(\w+);base64,/', $request->payment_receipt)) {
+            if (preg_match('/\/([a-zA-Z0-9+\/=]+);base64,/', $request->payment_receipt)) {
 
                 $base64String = substr($request->payment_receipt, strpos($request->payment_receipt, ',') + 1);
                 $decodedData = base64_decode($base64String);
 
                 $tempFilePath = public_path('temp/' . $request->fileName);
-
                 file_put_contents($tempFilePath, $decodedData);
 
                 $file = new UploadedFile(
@@ -42,6 +41,7 @@ class BankTransferController extends Controller
 
                 $request['payment_receipt'] = $file;
             }
+            // return response()->json(['status' => 200, 'data' => $tempFilePath, '64' => $request->payment_receipt]);
 
             $coupon_id = '';
             $plan = $request->plan;
@@ -103,7 +103,7 @@ class BankTransferController extends Controller
                     \Log::error('Error creating order: ' . $th->getMessage());
                     \Log::error('Exception trace: ' . $th->getTraceAsString());
                     return response()->json([
-                        'status' => 422, 'error_order' => $th->getMessage()
+                        'status' => 422, 'message' => 'order_error: '.$th->getMessage()
                     ]);
                 }
 
@@ -129,7 +129,7 @@ class BankTransferController extends Controller
             }
         } catch (\Exception $th) {
             return response()->json([
-                'status' => 422, 'error_overall' => $th->getMessage()
+                'status' => 422, 'message' => 'error_overall: ' . $th->getMessage()
             ]);
         }
     }

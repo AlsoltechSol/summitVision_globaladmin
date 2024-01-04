@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Coupon;
 use App\Models\Employee;
 use App\Models\Order;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Models\UserCoupon;
 use App\Models\Utility;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class BankTransferController extends Controller
 {
@@ -33,8 +35,8 @@ class BankTransferController extends Controller
         $authuser  = \Auth::user();
 
         // $order = Order::where('plan_id' , $plan->id)->where('payment_status' , 'Pending')->first();
-        $order = Order::where('plan_id',$planID)->where('payment_status','Pending')->where('user_id',$authuser->id)->first();
-        if($order){
+        $order = Order::where('plan_id', $planID)->where('payment_status', 'Pending')->where('user_id', $authuser->id)->first();
+        if ($order) {
             return redirect()->route('plans.index')->with('error', __('You already send Payment request to this plan.'));
         }
 
@@ -111,31 +113,45 @@ class BankTransferController extends Controller
     public function action($id)
     {
         $order     = Order::find($id);
-        $user  = User::find($order->user_id);
+        $user  = Company::find($order->company_id);
         $bank_details = Utility::getAdminPaymentSetting()['bank_details'];
-
+        // dd( $user);
         return view('order.show', compact('user', 'order', 'bank_details'));
     }
 
     public function changeaction(Request $request, $id)
     {
+        $company = Company::find($id);
         if ($request->status == 'Approved') {
-            $order = Order::find($request->order_id);
-            $user = User::find($order->user_id);
-            $pn       = Plan::find($order->plan_id);
-            $user->plan           = $order->plan_id;
-            $user->save();
-            $order->payment_status = 'Approved';
-            $order->save();
-            $assignPlan = $user->assignPlan($order->plan_id, $pn->duration);
 
-            return redirect()->route('order.index')->with('success', __('Plan payment successfully updated.'));
+            $response = Http::post($company->url . '/api/order/approve/' . $id, $request);
+
+            $response = $response->json();
+            
+            if ($response['status'] == 200) {
+                
+                $order = Order::find($request->order_id);
+
+                $order->payment_status = 'Approved';
+                $order->save();
+                return redirect()->route('order.index')->with('success', __('Plan payment successfully updated.'));
+            } else {
+                return redirect()->route('order.index')->with('error', __($response['message']));
+            }
         } elseif ($request->status == 'Reject') {
-            $order = Order::find($request->order_id);
-            $order->payment_status = 'Rejected';
-            $order->save();
+            $response = Http::post($company->url . '/api/order/approve/' . $id, $request);
 
-            return redirect()->route('order.index')->with('success', __('Plan payment successfully updated.'));
+            $response = $response->json();
+            if ($response['status'] == 200) {
+                $order = Order::find($request->order_id);
+                $order = Order::find($request->order_id);
+                $order->payment_status = 'Rejected';
+                $order->save();
+
+                return redirect()->route('order.index')->with('success', __('Plan payment successfully updated.'));
+            } else {
+                return redirect()->route('order.index')->with('error', __($response['message']));
+            }
         }
     }
 }
