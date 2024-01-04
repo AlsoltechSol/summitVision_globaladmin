@@ -256,8 +256,20 @@ Route::group(['middleware' => ['verified']], function () {
         ]
     );
 
-     //companies
-     Route::resource('companies', CompanyController::class)->middleware(
+    //companies
+    Route::resource('companies', CompanyController::class)->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+    Route::post('company_storage_setting_store/{company}', [CompanyController::class, 'company_storage_setting_store'])->name('company.storage.setting.store')->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+    Route::get('companies_settings/{id}', [CompanyController::class, 'company_settings'])->name('companies.settings')->middleware(
         [
             'auth',
             'XSS',

@@ -73,7 +73,7 @@
                                         </td>
                                         <td>
                                             @if (\Auth::user()->type == 'super admin')
-                                                @if ($order->payment_status == 'Pending' && $order->payment_type == 'Bank Transfer')
+                                                @if ($order->payment_status == 'Pending')
                                                     <div class="action-btn bg-success ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm align-items-center"
                                                             data-size="lg"
@@ -85,7 +85,7 @@
                                                         </a>
                                                     </div>
                                                 @endif
-                                            @elseif(\Auth::user()->type == 'company' && $order->payment_type == 'Bank Transfer')
+                                            {{-- @elseif(\Auth::user()->type == 'company' && $order->payment_type == 'Bank Transfer')
                                                 <div class="action-btn bg-success ms-2">
                                                     <a href="#" class="mx-3 btn btn-sm align-items-center"
                                                         data-size="lg"
@@ -95,7 +95,7 @@
                                                         data-bs-original-title="{{ __('Manage Order') }}">
                                                         <i class="text-white ti ti-caret-right"></i>
                                                     </a>
-                                                </div>
+                                                </div> --}}
                                             @else
                                             @endif
 

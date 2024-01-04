@@ -75,7 +75,9 @@
                                      <a href="{{ route('companies.show', $company->id) }}" class="btn btn-sm btn-primary">
                                           <i class="ti ti-eye"></i>
                                      </a>
-                                     
+                                     <a href="{{ route('companies.settings', $company->id) }}" class="btn btn-sm btn-primary">
+                                          <i class="ti ti-settings"></i>
+                                     </a>
                                     </td>
                                 </tr>
                             @endforeach
