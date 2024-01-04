@@ -13,10 +13,10 @@ class CreateUserCouponsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'user_coupons', function (Blueprint $table){
+        Schema::create('user_coupons', function (Blueprint $table){
             $table->bigIncrements('id');
             $table->integer('user');
+            $table->integer('company_id');
             $table->integer('coupon');
             $table->string('order')->nullable();
             $table->timestamps();

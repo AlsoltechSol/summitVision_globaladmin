@@ -1268,9 +1268,7 @@ class Utility extends Model
                     $mimes =  !empty($settings['local_storage_validation']) ? $settings['local_storage_validation'] : '';
                 }
 
-
                 $file = $request->$key_name;
-
 
                 if (count($custom_validation) > 0) {
                     $validation = $custom_validation;
