@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccountList;
 use App\Models\Announcement;
 use App\Models\AttendanceEmployee;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Event;
 use App\Models\LandingPageSection;
@@ -87,8 +88,9 @@ class HomeController extends Controller
             //     return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
             // } else if ($user->type == 'super admin') {
             $user                       = \Auth::user();
-            $user['total_user']         = $user->countCompany();
-            $user['total_paid_user']    = $user->countPaidCompany();
+            $company                    = Company::count();
+            $user['total_user']         = $company;
+            $user['total_paid_user']    = Order::whereNotIn('plan_id', [0, 1])->distinct('company_id')->count();
             $user['total_orders']       = Order::total_orders();
             $user['total_orders_price'] = Order::total_orders_price();
             $user['total_plan']         = Plan::total_plan();

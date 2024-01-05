@@ -9,8 +9,8 @@ use App\Models\Plan;
 use App\Models\UserCoupon;
 use App\Models\Utility;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
+use App\Helpers\ApiHelpers;
 
 class BankTransferController extends Controller
 {
@@ -18,30 +18,18 @@ class BankTransferController extends Controller
     {
 
         try {
-           
 
             $plan = $request->plan;
             $tempFilePath = null;
 
-            if (preg_match('/\/([a-zA-Z0-9+\/=]+);base64,/', $request->payment_receipt)) {
+            $res = ApiHelpers::processBase64File($request->payment_receipt, $request->fileName, $request->mime_type);
 
-                $base64String = substr($request->payment_receipt, strpos($request->payment_receipt, ',') + 1);
-                $decodedData = base64_decode($base64String);
-
-                $tempFilePath = public_path('temp/' . $request->fileName);
-                file_put_contents($tempFilePath, $decodedData);
-
-                $file = new UploadedFile(
-                    $tempFilePath,
-                    $request->fileName,
-                    $request->mime_type,
-                    null,
-                    true
-                );
-
-                $request['payment_receipt'] = $file;
+            if ($res == null) {
+                return response()->json(['status' => 422, 'message' => 'Unable to process base64 file.']);
             }
-            // return response()->json(['status' => 200, 'data' => $tempFilePath, '64' => $request->payment_receipt]);
+
+            $request['payment_receipt'] = $res['file'];
+            $tempFilePath = $res['tempFilePath'];
 
             $coupon_id = '';
             $plan = $request->plan;
@@ -72,7 +60,10 @@ class BankTransferController extends Controller
                 if (!empty($request->payment_receipt)) {
                     $dir        = 'uploads/order';
                     $path = Utility::upload_file($request, 'payment_receipt', $request->fileName, $dir, []);
-                    // unlink($tempFilePath); 
+
+                    if (file_exists($tempFilePath)) {
+                        unlink($tempFilePath);
+                    }
 
                     if ($path['flag'] != 1) {
                         return response()->json(['status' => 422, 'error' =>  $path['msg']]);
@@ -103,7 +94,7 @@ class BankTransferController extends Controller
                     \Log::error('Error creating order: ' . $th->getMessage());
                     \Log::error('Exception trace: ' . $th->getTraceAsString());
                     return response()->json([
-                        'status' => 422, 'message' => 'order_error: '.$th->getMessage()
+                        'status' => 422, 'message' => 'order_error: ' . $th->getMessage()
                     ]);
                 }
 
