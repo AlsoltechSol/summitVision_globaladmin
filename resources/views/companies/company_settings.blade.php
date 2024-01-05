@@ -23,6 +23,7 @@
 
 
 @section('content')
+
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-8">
         <h5 class=""><strong>{{ __('Company Admin: ')}}</strong> {{ $company->name  }}</h5>
@@ -31,6 +32,7 @@
 
     </div>
 </div>
+
 <div class="mt-4 row">
 
     <div class="row">
@@ -63,7 +65,7 @@
 
                         <!--storage Setting-->
                         <div id="storage-settings" class="">
-                        {{ Form::open(['route' => ['company.storage.setting.store', 'company' => $company], 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
+                            {{ Form::open(['route' => ['company.storage.setting.store', 'company' => $company], 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-lg-8 col-md-8 col-sm-8">
@@ -74,17 +76,17 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="pe-2">
-                                        <input type="radio" class="btn-check" name="storage_setting" id="local-outlined" autocomplete="off" {{ $setting['storage_setting'] == 'local' ? 'checked' : '' }} value="local" checked>
+                                        <input type="radio" class="btn-check" name="storage_setting" onchange="handleStorageOptions(this)" id="local-outlined" autocomplete="off" {{ $setting['storage_setting'] == 'local' ? 'checked' : '' }} value="local" checked>
                                         <label class="btn btn-outline-success" for="local-outlined">{{ __('Local') }}</label>
                                     </div>
                                     <div class="pe-2">
-                                        <input type="radio" class="btn-check" name="storage_setting" id="s3-outlined" autocomplete="off" {{ $setting['storage_setting'] == 's3' ? 'checked' : '' }} value="s3">
+                                        <input type="radio" class="btn-check" name="storage_setting" onchange="handleStorageOptions(this)" id="s3-outlined" autocomplete="off" {{ $setting['storage_setting'] == 's3' ? 'checked' : '' }} value="s3">
                                         <label class="btn btn-outline-success" for="s3-outlined">
                                             {{ __('AWS S3') }}</label>
                                     </div>
 
                                     <div class="pe-2">
-                                        <input type="radio" class="btn-check" name="storage_setting" id="wasabi-outlined" autocomplete="off" {{ $setting['storage_setting'] == 'wasabi' ? 'checked' : '' }} value="wasabi">
+                                        <input type="radio" class="btn-check" name="storage_setting" onchange="handleStorageOptions(this)" id="wasabi-outlined" autocomplete="off" {{ $setting['storage_setting'] == 'wasabi' ? 'checked' : '' }} value="wasabi">
                                         <label class="btn btn-outline-success" for="wasabi-outlined">{{ __('Wasabi') }}</label>
                                     </div>
                                 </div>
@@ -241,5 +243,35 @@
 
     </div>
 </div>
+<script>
+    console.log('first')
 
+    // $(document).on('change', '[name=storage_setting]', function() {
+    function handleStorageOptions(src) {
+        console.log('dcfvg');
+        console.log(src.value);
+
+        var storageType = src.value;
+
+        if (storageType === 's3') {
+            document.querySelector('.s3-setting').classList.remove('d-none');
+            document.querySelector('.wasabi-setting').classList.add('d-none');
+            document.querySelector('.local-setting').classList.add('d-none');
+        } else if (storageType === 'wasabi') {
+            document.querySelector('.s3-setting').classList.add('d-none');
+            document.querySelector('.wasabi-setting').classList.remove('d-none');
+            document.querySelector('.local-setting').classList.add('d-none');
+        } else {
+            document.querySelector('.s3-setting').classList.add('d-none');
+            document.querySelector('.wasabi-setting').classList.add('d-none');
+            document.querySelector('.local-setting').classList.remove('d-none');
+        }
+    }
+
+    // Assuming you're attaching this function to an event, for example:
+    // document.getElementById('yourSelectElementId').addEventListener('change', handleStorageOptions);
+
+
+    // });
+</script>
 @endsection

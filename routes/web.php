@@ -235,6 +235,7 @@ Route::group(['middleware' => ['verified']], function () {
             Route::post('/stripe', [StripePaymentController::class, 'stripePost'])->name('stripe.post');
         }
     );
+    Route::get('export/order', [StripePaymentController::class, 'export'])->name('order.export');
 
     Route::group(
         [
@@ -1054,6 +1055,8 @@ Route::group(['middleware' => ['verified']], function () {
             Route::resource('plan_request', PlanRequestController::class);
         }
     );
+
+    Route::get('export/plan_request', [StripePaymentController::class, 'export'])->name('plan_request.export');
 
 
 

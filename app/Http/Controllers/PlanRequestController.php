@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PlanRequestExport;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\Plan;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Excel;
 
 class PlanRequestController extends Controller
 {
@@ -19,18 +21,45 @@ class PlanRequestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         if (Auth::user()->type == 'super admin' || Gate::check('Manage Plan Request')) {
-            $plan_requests = PlanRequest::all();
-            // dd($plan_requests);
-            return view('plan_request.index', compact('plan_requests'));
+
+            $plan_requests = PlanRequest::query();
+
+            if (!empty($request->start_date)) {
+                $plan_requests->where('created_at', '>=', $request->start_date);
+            }
+            
+            if (!empty($request->end_date)) {
+                $plan_requests->where('created_at', '<=', $request->end_date);
+            }
+            
+            if (!empty($request->company_id)) {
+                $plan_requests->where('company_id', $request->company_id);
+            }
+            
+            $plan_requests = $plan_requests->get();
+            
+            $companies = Company::select('id', 'name')->pluck('name', 'id')->toArray();
+            $companies = ['' => 'All'] + $companies;
+            
+            // dd($plan_requests, $companies);
+            return view('plan_request.index', compact('plan_requests', 'companies'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
+    public function export(Request $request)
+    {
+        $name = 'Orders_' . date('Y-m-d i:h:s');
+        $data = Excel::download(new PlanRequestExport($request), $name . '.xlsx');
+
+
+        return $data;
+    }
     /*
      *@plan_id = Plan ID encoded
     */

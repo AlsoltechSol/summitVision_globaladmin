@@ -39,17 +39,15 @@ class Plan extends Model
     {
         return Plan::count();
     }
-        
+
     public static function most_purchese_plan()
     {
-        $free_plan = Plan::where('price', '<=', 0)->first()->id;
 
-        return User:: select('plans.name','plans.id', DB::raw('count(*) as total'))
-                   ->join('plans', 'plans.id' ,'=', 'users.plan')
-                   ->where('type', '=', 'company')
-                   ->where('plan', '!=', $free_plan)
-                   ->orderBy('total','Desc')
-                   ->groupBy('plans.name','plans.id')
-                   ->first();
+        return Plan::select('plans.name', 'plans.id', DB::raw('count(*) as total'))
+            ->join('orders', 'plans.id', '=', 'orders.plan_id')
+            ->where('plans.price', '>', 0)
+            ->orderBy('total', 'desc')
+            ->groupBy('plans.name', 'plans.id')
+            ->first();
     }
 }

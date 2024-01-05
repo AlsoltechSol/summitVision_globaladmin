@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Exports\OrderExport;
+use App\Exports\PlanRequestExport;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Plan;
@@ -12,19 +13,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Session;
 use Stripe;
+use Excel;
 
 class StripePaymentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $objUser = \Auth::user();
+
         if (\Auth::user()->type == 'super admin' || Gate::check('Manage Order')) {
             $orders  = Order::select(
                 [
                     'orders.*',
                     'companies.name as user_name',
                 ]
-            )->join('companies', 'orders.company_id', '=', 'companies.id')->orderBy('orders.created_at', 'DESC')->get();
+                );
+            if (!empty($request->start_date)) {
+                $orders->where('orders.created_at', '>=', $request->start_date);
+            }
+
+            if (!empty($request->end_date)) {
+                $orders->where('orders.created_at', '<=', $request->end_date);
+            }
+
+            if (!empty($request->payment_status)) {
+                $orders->where('orders.payment_status', $request->payment_status);
+            }
+
+     
+            $orders->join('companies', 'orders.company_id', '=', 'companies.id')->orderBy('orders.created_at', 'DESC');
+
+            $orders = $orders->get();
 
             return view('order.index', compact('orders'));
 
@@ -33,6 +52,14 @@ class StripePaymentController extends Controller
         }
     }
 
+    public function export(Request $request)
+    {
+        $name = 'Plan_Requests_' . date('Y-m-d i:h:s');
+        $data = Excel::download(new PlanRequestExport($request), $name . '.xlsx');
+
+
+        return $data;
+    }
     public function stripe($code)
     {
         $admin_payment_setting = Utility::getAdminPaymentSetting();
