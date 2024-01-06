@@ -66,7 +66,7 @@ class BankTransferController extends Controller
                     }
 
                     if ($path['flag'] != 1) {
-                        return response()->json(['status' => 422, 'error' =>  $path['msg']]);
+                        return response()->json(['status' => 422, 'message' =>  $path['msg']]);
                     }
                 }
                 try {
