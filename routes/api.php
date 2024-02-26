@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\Web_Api\BankTransferController;
 use App\Http\Controllers\Web_Api\CouponController;
+use App\Http\Controllers\Web_Api\EmailverificationController;
 use App\Http\Controllers\Web_Api\PlanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web_Api\LandingPageController;
 use App\Http\Controllers\Web_Api\PlanRequestController;
+use App\Http\Controllers\Web_Api\RegisterdCompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +38,6 @@ Route::resource('plan_request', PlanRequestController::class);
 Route::resource('banktransfer', BankTransferController::class);
 Route::post('banktransfer_request', [BankTransferController::class, 'banktransferstore']);
 Route::get('/apply-coupon', [CouponController::class, 'applyCoupon']);
+Route::get('get_settings_for_api', [SettingsController::class, 'get_settings_for_api']);
+Route::resource('email_verification', EmailverificationController::class);
+Route::resource('register_company', RegisterdCompanyController::class);

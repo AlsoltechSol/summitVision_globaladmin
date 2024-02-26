@@ -18,7 +18,8 @@ class LandingPageController extends Controller
         $logo = Utility::get_file('uploads/landing_page_image/');
         $sup_logo = Utility::get_file('uploads/logo');
         $adminSettings = Utility::settings();
-        
+        $company_logo = \App\Models\Utility::GetLogo();
+
         $getseo = \App\Models\Utility::getSeoSetting();
         $metatitle = isset($getseo['meta_title']) ? $getseo['meta_title'] : '';
         $metadesc = isset($getseo['meta_description']) ? $getseo['meta_description'] : '';
@@ -46,6 +47,7 @@ class LandingPageController extends Controller
             'setting' => $setting,
             'SITE_RTL' => $SITE_RTL,
             'color' => $color,
+            'company_logo' =>  $company_logo,
         ]);
     }
 

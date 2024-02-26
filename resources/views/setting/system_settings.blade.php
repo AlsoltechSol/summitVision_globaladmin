@@ -198,6 +198,7 @@
     $chatgpt_key = Utility::getValByName('chatgpt_key');
     $chatgpt_enable = !empty($chatgpt_key);
     
+    $app_name = env('APP_NAME') ?? '';
 @endphp
 @if ($color == 'theme-1')
     <style>
@@ -286,43 +287,43 @@
                         <div class="list-group list-group-flush" id="useradd-sidenav">
 
                             <a href="#brand-settings" id="site-setting-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Brand Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('Brand Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#email-settings" id="email-setting-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Email Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('Email Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#payment-settings" id="payment-setting-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Payment Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('Payment Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#pusher-settings" id="pusher-setting-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Pusher Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('Pusher Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#recaptcha-print-settings" id="recaptcha-print-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('ReCaptcha Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('ReCaptcha Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                             <a href="#storage-settings" id="storage-print-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Storage Settings') }} <div
+                                class="border-0 list-group-item list-group-item-action">{{ __('Storage Settings') }} <div
                                     class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                             <a href="#SEO-settings" id="seo-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('SEO Settings') }}
+                                class="border-0 list-group-item list-group-item-action">{{ __('SEO Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                             <a href="#cache-settings" id="cache-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Cache Settings') }}
+                                class="border-0 list-group-item list-group-item-action">{{ __('Cache Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                             <a href="#cookie-settings" id="cookie-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Cookie Consent Settings') }}
+                                class="border-0 list-group-item list-group-item-action">{{ __('Cookie Consent Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                             <a href="#pills-chatgpt-settings" id="chatgpt-tab"
-                                class="list-group-item list-group-item-action border-0">{{ __('Chat GPT Key Settings') }}
+                                class="border-0 list-group-item list-group-item-action">{{ __('Chat GPT Key Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                         </div>
@@ -344,9 +345,9 @@
                                                     <div class="card-header">
                                                         <h5>{{ __('Logo dark') }}</h5>
                                                     </div>
-                                                    <div class="card-body pt-0">
+                                                    <div class="pt-0 card-body">
                                                         <div class=" setting-card">
-                                                            <div class="logo-content mt-4 setting-logo">
+                                                            <div class="mt-4 logo-content setting-logo">
                                                                 <a href="{{ $logo . 'logo-dark.png' }}" target="_blank">
                                                                     <img id="image" alt="your image"
                                                                         src="{{ $logo . 'logo-dark.png' . '?' . time() }}"
@@ -354,10 +355,10 @@
                                                                 </a>
 
                                                             </div>
-                                                            <div class="choose-files mt-5">
+                                                            <div class="mt-5 choose-files">
                                                                 <label for="logo">
                                                                     <div class=" bg-primary logo_update"> <i
-                                                                            class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                            class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                                     </div>
                                                                     <input type="file" class="form-control file"
                                                                         name="logo" id="logo"
@@ -384,9 +385,9 @@
                                                     <div class="card-header">
                                                         <h5>{{ __('Logo Light') }}</h5>
                                                     </div>
-                                                    <div class="card-body pt-0">
+                                                    <div class="pt-0 card-body">
                                                         <div class=" setting-card">
-                                                            <div class="logo-content mt-4  setting-logo">
+                                                            <div class="mt-4 logo-content setting-logo">
                                                                 <a href="{{ $logo . 'logo-light.png' }}" target="_blank">
                                                                     <img id="image1" alt="your image"
                                                                         src="{{ $logo . 'logo-light.png' . '?' . time() }}"
@@ -395,10 +396,10 @@
                                                                 </a>
                                                             </div>
 
-                                                            <div class="choose-files mt-5">
+                                                            <div class="mt-5 choose-files">
                                                                 <label for="logo_light">
                                                                     <div class=" bg-primary logo_light_update"> <i
-                                                                            class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                            class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                                     </div>
                                                                     <input type="file" class="form-control file"
                                                                         name="logo_light" id="logo_light"
@@ -422,9 +423,9 @@
                                                     <div class="card-header">
                                                         <h5>{{ __('Favicon') }}</h5>
                                                     </div>
-                                                    <div class="card-body pt-0">
+                                                    <div class="pt-0 card-body">
                                                         <div class=" setting-card">
-                                                            <div class="logo-content mt-4 setting-logo ">
+                                                            <div class="mt-4 logo-content setting-logo ">
                                                                 <a href="{{ $logo . (isset($favicon) && !empty($favicon) ? $favicon : 'favicon.png') }}"
                                                                     target="_blank">
                                                                     <img id="image2" alt="your image"
@@ -432,10 +433,10 @@
                                                                         width="50px" class="big-logo img_setting">
                                                                 </a>
                                                             </div>
-                                                            <div class="choose-files mt-5">
+                                                            <div class="mt-5 choose-files">
                                                                 <label for="favicon_update">
                                                                     <div class=" bg-primary favicon_update"> <i
-                                                                            class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                            class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                                     </div>
                                                                     <input type="file" class="form-control file"
                                                                         name="favicon" id="favicon_update"
@@ -463,9 +464,15 @@
                                                         <strong class="text-danger">{{ $message }}</strong>
                                                     </span>
                                                 @enderror
-
-
-
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                {{ Form::label('app_name', __('App Name'), ['class' => 'col-form-label']) }}
+                                                {{ Form::text('app_name', $app_name, ['class' => 'form-control', 'placeholder' => __('Title Text')]) }}
+                                                @error('app_name')
+                                                    <span class="invalid-title_text" role="alert">
+                                                        <strong class="text-danger">{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                             <div class="form-group col-md-4">
                                                 {{ Form::label('footer_text', __('Footer Text'), ['class' => 'col-form-label']) }}
@@ -498,14 +505,14 @@
                                             <div class="row">
                                                 <div class="col-sm-3 ">
                                                     <div class="col switch-width">
-                                                        <div class="form-group ml-2 mr-3">
+                                                        <div class="ml-2 mr-3 form-group">
                                                             {{ Form::label('display_landing_page', __('Enable Landing Page'), ['class' => 'col-form-label']) }}
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" data-toggle="switchbutton"
                                                                     data-onstyle="primary" class=""
                                                                     name="display_landing_page" id="display_landing_page"
                                                                     {{ $settings['display_landing_page'] == 'on' ? 'checked="checked"' : '' }}>
-                                                                <label class="custom-control-label mb-1"
+                                                                <label class="mb-1 custom-control-label"
                                                                     for="display_landing_page"></label>
                                                             </div>
                                                         </div>
@@ -513,14 +520,14 @@
                                                 </div>
                                                 <div class="col-sm-3 ">
                                                     <div class="col switch-width">
-                                                        <div class="form-group ml-2 mr-3">
+                                                        <div class="ml-2 mr-3 form-group">
                                                             {{ Form::label('SITE_RTL', __('Enable RTL'), ['class' => 'col-form-label']) }}
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" data-toggle="switchbutton"
                                                                     data-onstyle="primary" class="" name="SITE_RTL"
                                                                     id="SITE_RTL"
                                                                     {{ \App\Models\Utility::getValByName('SITE_RTL') == 'on' ? 'checked="checked"' : '' }}>
-                                                                <label class="custom-control-label mb-1"
+                                                                <label class="mb-1 custom-control-label"
                                                                     for="SITE_RTL"></label>
                                                             </div>
                                                         </div>
@@ -529,7 +536,7 @@
 
                                                 <div class="col-sm-3 ">
                                                     <div class="col switch-width">
-                                                        <div class="form-group ml-2 mr-3">
+                                                        <div class="ml-2 mr-3 form-group">
                                                             {{ Form::label('disable_signup_button', __('Enable Sign-Up Page'), ['class' => 'col-form-label']) }}
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" data-toggle="switchbutton"
@@ -537,7 +544,7 @@
                                                                     name="disable_signup_button"
                                                                     id="disable_signup_button"
                                                                     {{ $settings['disable_signup_button'] == 'on' ? 'checked="checked"' : '' }}>
-                                                                <label class="custom-control-label mb-1"
+                                                                <label class="mb-1 custom-control-label"
                                                                     for="disable_signup_button"></label>
                                                             </div>
                                                         </div>
@@ -546,14 +553,14 @@
 
                                                 <div class="col-sm-3">
                                                     <div class="col switch-width">
-                                                        <div class="form-group ml-2 mr-3 ">
+                                                        <div class="ml-2 mr-3 form-group ">
                                                             {{ Form::label('email_verification', __('Email Verification'), ['class' => 'col-form-label']) }}
                                                             <div class="custom-control custom-switch">
                                                                 <input type="checkbox" data-toggle="switchbutton"
                                                                     data-onstyle="primary" class=""
                                                                     name="email_verification" id="email_verification"
                                                                     {{ $settings['email_verification'] == 'on' ? 'checked="checked"' : '' }}>
-                                                                <label class="custom-control-label mb-1"
+                                                                <label class="mb-1 custom-control-label"
                                                                     for="email_verification"></label>
                                                             </div>
                                                         </div>
@@ -561,8 +568,8 @@
                                                 </div>
 
                                                 {{-- <div class="col-sm-3">
-                                                    <div class="custom-control custom-switch p-0">
-                                                        <div class="form-group ml-2 mr-3">
+                                                    <div class="p-0 custom-control custom-switch">
+                                                        <div class="ml-2 mr-3 form-group">
                                                             <label class="col-form-label"
                                                                 for="gdpr_cookie">{{ __('GDPR Cookie') }}</label><br>
                                                             <input type="checkbox"
@@ -660,7 +667,7 @@
                                                         </div>
 
                                                         <div class="col-sm-4">
-                                                            <h6 class=" ">
+                                                            <h6 class="">
                                                                 <i data-feather="layout"
                                                                     class="me-2"></i>{{ __('Sidebar Settings') }}
                                                             </h6>
@@ -670,22 +677,22 @@
                                                                     id="cust_theme_bg" name="cust_theme_bg"
                                                                     {{ $settings['cust_theme_bg'] == 'on' ? 'checked' : '' }} />
 
-                                                                <label class="form-check-label f-w-600 pl-1"
+                                                                <label class="pl-1 form-check-label f-w-600"
                                                                     for="cust_theme_bg">{{ __('Transparent layout') }}</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <h6 class=" ">
+                                                            <h6 class="">
                                                                 <i data-feather="sun"
                                                                     class=""></i>{{ __('Layout Settings') }}
                                                             </h6>
-                                                            <hr class=" my-2  " />
-                                                            <div class="form-check form-switch mt-2 ">
+                                                            <hr class="my-2 " />
+                                                            <div class="mt-2 form-check form-switch ">
                                                                 <input type="checkbox" class="form-check-input"
                                                                     id="cust_darklayout" name="cust_darklayout"
                                                                     {{ $settings['cust_darklayout'] == 'on' ? 'checked' : '' }} />
 
-                                                                <label class="form-check-label f-w-600 pl-1"
+                                                                <label class="pl-1 form-check-label f-w-600"
                                                                     for="cust_darklayout">{{ __('Dark Layout') }}
                                                                 </label>
                                                             </div>
@@ -786,7 +793,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <a href="#"
-                                                    class="btn btn-print-invoice  btn-primary m-r-10 send_email"
+                                                    class="btn btn-print-invoice btn-primary m-r-10 send_email"
                                                     data-ajax-popup="true" data-title="{{ __('Send Test Mail') }}"
                                                     data-url="{{ route('test.mail') }}">
                                                     {{ __('Send Test Mail') }}
@@ -927,7 +934,7 @@
                                                             <div class="accordion-body">
                                                                 <div class="d-flex">
                                                                     <div class="mr-2" style="margin-right: 15px;">
-                                                                        <div class="border card p-1">
+                                                                        <div class="p-1 border card">
                                                                             <div class="form-check">
                                                                                 <label class="form-check-labe text-dark">
                                                                                     <input type="radio"
@@ -940,7 +947,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="mr-2">
-                                                                        <div class="border card p-1">
+                                                                        <div class="p-1 border card">
                                                                             <div class="form-check">
                                                                                 <label class="form-check-labe text-dark">
                                                                                     <input type="radio"
@@ -1282,13 +1289,13 @@
                                                             aria-labelledby="headingSix"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="col-md-12 pb-4">
+                                                                <div class="pb-4 col-md-12">
                                                                     <label class="paypal-label col-form-label"
                                                                         for="paypal_mode">{{ __('Paytm Environment') }}</label>
                                                                     <br>
                                                                     <div class="d-flex">
                                                                         <div class="mr-2" style="margin-right: 15px;">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1303,7 +1310,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="mr-2">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1409,13 +1416,13 @@
                                                             aria-labelledby="headingseven"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="col-md-12 pb-4">
+                                                                <div class="pb-4 col-md-12">
                                                                     <label class="coingate-label col-form-label"
                                                                         for="mercado_mode">{{ __('Mercado Mode') }}</label>
                                                                     <br>
                                                                     <div class="d-flex">
                                                                         <div class="mr-2" style="margin-right: 15px;">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1430,7 +1437,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="mr-2">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1623,13 +1630,13 @@
                                                             aria-labelledby="headingten"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="col-md-12 pb-4">
+                                                                <div class="pb-4 col-md-12">
                                                                     <label class="col-form-label"
                                                                         for="coingate_mode">{{ __('CoinGate Mode') }}</label>
                                                                     <br>
                                                                     <div class="d-flex">
                                                                         <div class="mr-2" style="margin-right: 15px;">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1644,7 +1651,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="mr-2">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1831,13 +1838,13 @@
                                                             aria-labelledby="headingthirteen"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="col-md-12 pb-4">
+                                                                <div class="pb-4 col-md-12">
                                                                     <label class="coingate-label col-form-label"
                                                                         for="payfast_mode">{{ __('Payfast Mode') }}</label>
                                                                     <br>
                                                                     <div class="d-flex">
                                                                         <div class="mr-2" style="margin-right: 15px;">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1852,7 +1859,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="mr-2">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1944,13 +1951,13 @@
                                                             aria-labelledby="headingSixteen"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="col-md-12 pb-4">
+                                                                <div class="pb-4 col-md-12">
                                                                     <label class="coingate-label col-form-label"
                                                                         for="iyzipay_mode">{{ __('Iyzipay Mode') }}</label>
                                                                     <br>
                                                                     <div class="d-flex">
                                                                         <div class="mr-2" style="margin-right: 15px;">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -1965,7 +1972,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="mr-2">
-                                                                            <div class="border card p-1">
+                                                                            <div class="p-1 border card">
                                                                                 <div class="form-check">
                                                                                     <label
                                                                                         class="form-check-labe text-dark">
@@ -2299,7 +2306,7 @@
                                                                     {{ __('Aamarpay') }}
                                                                 </span>
                                                                 <div class="d-flex align-items-center">
-                                                                    <label class="form-check-label m-1"
+                                                                    <label class="m-1 form-check-label"
                                                                         for="is_aamarpay_enabled">{{ __('Enable') }}:</label>
                                                                     <div class="form-check form-switch custom-switch-v1">
                                                                         <input type="hidden" name="is_aamarpay_enabled"
@@ -2317,7 +2324,7 @@
                                                             aria-labelledby="headingTwenty-One"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="row pt-2">
+                                                                <div class="pt-2 row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             {{ Form::label('aamarpay_store_id', __('Store Id'), ['class' => 'form-label']) }}
@@ -2367,7 +2374,7 @@
                                                                     {{ __('PayTR') }}
                                                                 </span>
                                                                 <div class="d-flex align-items-center">
-                                                                    <label class="form-check-label m-1"
+                                                                    <label class="m-1 form-check-label"
                                                                         for="is_paytr_enabled">{{ __('Enable') }}:</label>
                                                                     <div class="form-check form-switch custom-switch-v1">
                                                                         <input type="hidden" name="is_paytr_enabled"
@@ -2385,7 +2392,7 @@
                                                             aria-labelledby="headingTwenty-Two"
                                                             data-bs-parent="#accordionExample">
                                                             <div class="accordion-body">
-                                                                <div class="row pt-2">
+                                                                <div class="pt-2 row">
                                                                     <div class="col-md-4">
                                                                         <div class="form-group">
                                                                             {{ Form::label('paytr_merchant_id', __('Merchant Id'), ['class' => 'form-label']) }}
@@ -2518,7 +2525,7 @@
                                                         data-onstyle="primary" class="" name="recaptcha_module"
                                                         id="recaptcha_module" value="yes"
                                                         {{ env('RECAPTCHA_MODULE') == 'yes' ? 'checked="checked"' : '' }}>
-                                                    <label class="custom-control-label form-control-label px-2"
+                                                    <label class="px-2 custom-control-label form-control-label"
                                                         for="recaptcha_module "></label><br>
                                                     <a href="https://phppot.com/php/how-to-get-google-recaptcha-site-and-secret-key/"
                                                         target="_blank" class="text-blue">
@@ -2624,7 +2631,7 @@
 
                                 <div class="s3-setting row {{ $setting['storage_setting'] == 's3' ? ' ' : 'd-none' }}">
 
-                                    <div class=" row ">
+                                    <div class=" row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-label" for="s3_key">{{ __('S3 Key') }}</label>
@@ -2702,7 +2709,7 @@
 
                                 <div
                                     class="wasabi-setting row {{ $setting['storage_setting'] == 'wasabi' ? ' ' : 'd-none' }}">
-                                    <div class=" row ">
+                                    <div class=" row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-label"
@@ -2782,7 +2789,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer text-end">
-                                    <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit"
+                                    <input class="btn btn-print-invoice btn-primary m-r-10" type="submit"
                                         value="{{ __('Save Changes') }}">
                                 </div>
                                 {{ Form::close() }}
@@ -2826,7 +2833,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group mb-0">
+                                    <div class="mb-0 form-group">
                                         {{ Form::label('Meta Image', __('Meta Image'), ['class' => 'col-form-label']) }}
                                     </div>
                                     <div class="setting-card">
@@ -2835,10 +2842,10 @@
                                                 src="{{ $meta_image . '/' . (isset($setting['meta_image']) && !empty($setting['meta_image']) ? $setting['meta_image'] : 'hrmgo.png') }}"
                                                 class="img_setting seo_image">
                                         </div>
-                                        <div class="choose-files mt-4">
+                                        <div class="mt-4 choose-files">
                                             <label for="meta_image">
                                                 <div class="bg-primary meta_image"> <i
-                                                        class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                        class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                 </div>
                                                 {{-- <input type="file" class="form-control file" id="meta_image"
                                                     name="meta_image" data-filename="meta_image"> --}}
@@ -2906,7 +2913,7 @@
                     <div class="card" id="cookie-settings">
                         {{ Form::model($settings, ['route' => 'cookie.setting', 'method' => 'post']) }}
                         <div
-                            class="card-header flex-column flex-lg-row  d-flex align-items-lg-center gap-2 justify-content-between">
+                            class="gap-2 card-header flex-column flex-lg-row d-flex align-items-lg-center justify-content-between">
                             <h5>{{ __('Cookie Settings') }}</h5>
                             <div class="d-flex align-items-center">
                                 {{ Form::label('enable_cookie', __('Enable cookie'), ['class' => 'col-form-label p-0 fw-bold me-3']) }}
@@ -2914,7 +2921,7 @@
                                     <input type="checkbox" data-toggle="switchbutton" data-onstyle="primary"
                                         name="enable_cookie" class="form-check-input input-primary "
                                         id="enable_cookie" {{ $settings['enable_cookie'] == 'on' ? ' checked ' : '' }}>
-                                    <label class="custom-control-label mb-1" for="enable_cookie"></label>
+                                    <label class="mb-1 custom-control-label" for="enable_cookie"></label>
                                 </div>
                             </div>
                         </div>
@@ -2925,7 +2932,7 @@
                                 @if ($chatgpt_enable)
                                     <div class="text-end">
                                         <div class="mt-0">
-                                            <a data-size="md" class="btn btn-primary text-white btn-sm"
+                                            <a data-size="md" class="text-white btn btn-primary btn-sm"
                                                 data-ajax-popup-over="true"
                                                 data-url="{{ route('generate', ['cookie']) }}" data-bs-placement="top"
                                                 data-title="{{ __('Generate content with AI') }}">
@@ -3011,7 +3018,7 @@
                                         <label for="file"
                                             class="form-label">{{ __('Download cookie accepted data') }}</label>
                                         <a href="{{ asset(Storage::url('uploads/sample')) . '/data.csv' }}"
-                                            class="btn btn-primary mr-2 ">
+                                            class="mr-2 btn btn-primary ">
                                             <i class="ti ti-download"></i>
                                         </a>
                                     @endif
