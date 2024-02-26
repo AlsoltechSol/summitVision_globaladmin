@@ -226,6 +226,12 @@ class SettingsController extends Controller
                 }
             }
 
+            $arrEnv = [
+                'APP_NAME' => $request->app_name,
+            ];
+    
+            Utility::setEnvironmentValue($arrEnv);
+            
             return redirect()->back()->with('success', 'Setting successfully updated.');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -1722,5 +1728,11 @@ class SettingsController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+    }
+
+    public function get_settings_for_api(){
+        $settings = \App\Models\Utility::settings();
+
+        return response()->json(['status' => 200, 'settings' => $settings]);
     }
 }
