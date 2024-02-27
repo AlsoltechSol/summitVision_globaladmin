@@ -41,3 +41,5 @@ Route::get('/apply-coupon', [CouponController::class, 'applyCoupon']);
 Route::get('get_settings_for_api', [SettingsController::class, 'get_settings_for_api']);
 Route::resource('email_verification', EmailverificationController::class);
 Route::resource('register_company', RegisterdCompanyController::class);
+Route::post('register_company_resend_email', [RegisterdCompanyController::class, 'register_company_resend_email']);
+Route::post('verify_token', [RegisterdCompanyController::class, 'verify_token']);

@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('is_verified', 1)->default('0');
             $table->string('server_config_status', 1)->default('0');
             $table->string('verification_token', 255)->nullable();
+            $table->string('company_name', 255)->nullable();
+            $table->json('server_setup_json')->nullable();
+            $table->timestamp('server_setup_started_at')->nullable();
             $table->timestamps();
         });
     }
