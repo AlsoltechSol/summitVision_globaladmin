@@ -156,7 +156,7 @@ class RegisterdCompanyController extends Controller
         }
 
         $company = Company::where('verification_token', $request->token)->first();
-        
+
         $server_setup_json = null;
         if ($company != null) {
             if ($company->server_setup_json == null) {
@@ -166,16 +166,49 @@ class RegisterdCompanyController extends Controller
                     "fileop" => 0,
                     "modify_env" => 0,
                 ];
-        
+
                 $server_setup_json = json_encode($server_setup_json);
                 $company->server_setup_json = $server_setup_json;
                 $company->save();
             }
-            return response()->json(['status' => 200, 'message' => 'Success ', 'company' => $company]); 
-        }else{
+            return response()->json(['status' => 200, 'message' => 'Success ', 'company' => $company]);
+        } else {
             return response()->json(['status' => 422, 'message' => 'Company Not found or token expired', 'company' => $company]);
         }
+    }
 
+    public function update_company_setup(Request $request)
+    {
+
+        try {
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'name' => 'sometimes|string',
+                    'email' => 'sometimes|email',
+                    'mobile' => 'sometimes|numeric',
+                    'password' => 'sometimes|string',
+                    'url' => 'sometimes|string',
+                    'verification_token' => 'sometimes|string',
+                    'company_name' => 'sometimes|string',
+                    'server_setup_json' => 'sometimes|string',
+                    'server_setup_started_at' => 'nullable',
+                ]
+            );
+            if ($validator->fails()) {
+                return response()->json(['status' => 422, 'message' => $validator->errors()->first()]);
+            }
+            
+            $validatedData = $validator->validated();
+
+            $company = Company::findOrFail($request->id);
+
+            $company->fill($validatedData)->save();
+
+            return response()->json(['status' => 200, 'company' => $company, 'message' => 'Company setup updated successfully']);
+        } catch (\Exception $th) {
+            return response()->json(['status' => 422, 'message' => $th->getMessage()]);
+        }
     }
     /**
      * Display the specified resource.

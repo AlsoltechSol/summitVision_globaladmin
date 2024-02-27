@@ -43,3 +43,4 @@ Route::resource('email_verification', EmailverificationController::class);
 Route::resource('register_company', RegisterdCompanyController::class);
 Route::post('register_company_resend_email', [RegisterdCompanyController::class, 'register_company_resend_email']);
 Route::post('verify_token', [RegisterdCompanyController::class, 'verify_token']);
+Route::post('update_company_setup', [RegisterdCompanyController::class, 'update_company_setup']);
