@@ -43,7 +43,6 @@ class RegisterdCompanyController extends Controller
     public function store(Request $request)
     {
 
-
         $validator = \Validator::make(
             $request->all(),
             [
@@ -82,7 +81,7 @@ class RegisterdCompanyController extends Controller
         }
 
         $company = Company::where('email', $request->email)->first();
-        $str = Str::random(40);
+        $str = Str::random(200);
         // return response()->json(['status' => 422, 'message' => $request->company_name]);
 
         if ($company == null) {
@@ -157,20 +156,8 @@ class RegisterdCompanyController extends Controller
 
         $company = Company::where('verification_token', $request->token)->first();
 
-        $server_setup_json = null;
         if ($company != null) {
-            if ($company->server_setup_json == null) {
-                $server_setup_json = [
-                    "create_domain_and_dir" => 0,
-                    "database_create_and_config" => 0,
-                    "fileop" => 0,
-                    "modify_env" => 0,
-                ];
 
-                $server_setup_json = json_encode($server_setup_json);
-                $company->server_setup_json = $server_setup_json;
-                $company->save();
-            }
             return response()->json(['status' => 200, 'message' => 'Success ', 'company' => $company]);
         } else {
             return response()->json(['status' => 422, 'message' => 'Company Not found or token expired', 'company' => $company]);
@@ -188,22 +175,34 @@ class RegisterdCompanyController extends Controller
                     'email' => 'sometimes|email',
                     'mobile' => 'sometimes|numeric',
                     'password' => 'sometimes|string',
-                    'url' => 'sometimes|string',
+                    'url' => 'sometimes',
                     'verification_token' => 'sometimes|string',
                     'company_name' => 'sometimes|string',
-                    'server_setup_json' => 'sometimes|string',
                     'server_setup_started_at' => 'nullable',
+                    'DB_DATABASE' => 'sometimes',
+                    'DB_USERNAME' => 'sometimes',
+                    'DB_HOST' => 'sometimes',
+                    'sub_domain' => 'sometimes',
+                    'DB_PASSWORD' => 'sometimes',
+                    'create_domain_and_dir' => 'sometimes',
+                    'database_create_and_config' => 'sometimes',
+                    'fileop' => 'sometimes',
+                    'modify_env' => 'sometimes',
                 ]
             );
             if ($validator->fails()) {
                 return response()->json(['status' => 422, 'message' => $validator->errors()->first()]);
             }
-            
+
             $validatedData = $validator->validated();
 
             $company = Company::findOrFail($request->id);
 
-            $company->fill($validatedData)->save();
+            $filteredData = array_filter($validatedData, function ($value) {
+                return $value !== null && $value !== '';
+            });
+
+            $company->fill($filteredData)->save();
 
             return response()->json(['status' => 200, 'company' => $company, 'message' => 'Company setup updated successfully']);
         } catch (\Exception $th) {
