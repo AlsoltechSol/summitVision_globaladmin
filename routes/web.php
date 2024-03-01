@@ -102,6 +102,7 @@ use App\Http\Controllers\PayfastController;
 use App\Http\Controllers\PayslipTypeController;
 use App\Http\Controllers\PaytabController;
 use App\Http\Controllers\PaytrController;
+use App\Http\Controllers\SendEmailToCompanyController;
 use App\Http\Controllers\SspayController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\ToyyibpayPaymentController;
@@ -1664,3 +1665,5 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('grammar/{template}', [AiTemplateController::class, 'grammar'])->name('grammar')->middleware(['auth', 'XSS']);
     Route::post('grammar/response', [AiTemplateController::class, 'grammarProcess'])->name('grammar.response')->middleware(['auth', 'XSS']);
 });
+
+Route::resource('send-emails', SendEmailToCompanyController::class);
