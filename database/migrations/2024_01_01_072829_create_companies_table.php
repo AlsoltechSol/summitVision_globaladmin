@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('database_create_and_config', 1)->default('0');
             $table->string('fileop', 1)->default('0');
             $table->string('modify_env', 1)->default('0');
+            $table->integer('plan')->nullable();
+            $table->date('plan_expire_date')->nullable();
             $table->string('company_name', 255)->nullable();
             $table->json('server_setup_json')->nullable();
             $table->timestamp('server_setup_started_at')->nullable();
