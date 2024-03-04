@@ -171,8 +171,8 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                                                <p style=" line-height:32px"><b style="font-weight:700">{{__('Subject : ').$company['plan'] ? 'Your Plan is set to expire soon': 'Your demo period is ending soon'}}</b></p>
-                                                                <p style="line-height:32px"><b style="font-weight:700">{{__('Hi ').$company['name'].','}}</b></p>
+                                                                <p style=" line-height:32px"><b style="font-weight:700">{{__('Subject : ').'Welcome to ' . env('APP_NAME')}}</b></p>
+                                                                <p style="line-height:32px"><b style="font-weight:700">{{__('Hello ').$company['name'].','}}</b></p>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -180,21 +180,26 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                                                <p style="margin: 10px 0;">{{__($company['plan'] ? 'We hope this email finds you well. We are reaching out to inform you that your subscription with '. env('APP_NAME').' is set to expire soon. As valued members of our community, we want to ensure that you continue to benefit from our services without interruption.':
-                                                                    "We hope you've been enjoying your demo account with us at ". env('APP_NAME') .". We're reaching out to inform you that your demo account is set to expire soon. As your trial period comes to an end, we wanted to remind you of the steps you need to take to continue enjoying our services.")}}</p>
+                                                                <p style="margin: 10px 0;">{{__("Welcome to ".env('APP_NAME')."! We're thrilled to have you as a new member of our community.")}}</p>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                                            <p style="margin: 10px 0;">{{__($company['plan'] ? 'Your subscription is expiring on '.$company['plan_expire_date'].', and we wanted to remind you in advance to avoid any disruption in service. By renewing now, you can continue to enjoy uninterrupted access to our premium features and services.':
-                                                              "Your demo account is scheduled to expire on ".$company['plan_expire_date'].". After this date, your account will be deleted, and your access to our platform will be restricted.
-                                                              To continue using our services and prevent any disruption, we encourage you to purchase a subscription plan before the demo account deletion date. By upgrading to a paid plan, you'll unlock access to a more features and benefits tailored to meet your needs.")}}</p>
+                                                            <p style="margin: 10px 0;">{{__("Your account has been successfully created, and here are your login credentials:")}}</p>
                                                             </div>
                                                         </td>
                                                     </tr>
-
+                                                    <tr>
+                                                        <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
+                                                            <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
+                                                            <p style="margin: 10px 0;">{{__("Login Url: ". $company['url'])}}</p>
+                                                            <p style="margin: 10px 0;">{{__("Email: ". $company['email'])}}</p>
+                                                            {{-- <p style="margin: 10px 0;">{{__("Password: ". $company['password'])}}</p> --}}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">

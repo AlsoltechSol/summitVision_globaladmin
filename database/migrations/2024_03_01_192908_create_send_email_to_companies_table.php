@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id');
             $table->date('sent_date');
             $table->char('is_demo_acc', 1)->default('0');
+            $table->string('reason', 20)->nullable();
             $table->timestamps();
         });
     }
