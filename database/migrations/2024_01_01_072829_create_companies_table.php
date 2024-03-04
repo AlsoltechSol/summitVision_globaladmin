@@ -36,6 +36,7 @@ return new class extends Migration
             $table->date('plan_expire_date')->nullable();
             $table->string('company_name', 255)->nullable();
             $table->json('server_setup_json')->nullable();
+            $table->string('setup_by_cron', 1)->nullable();
             $table->timestamp('server_setup_started_at')->nullable();
             $table->timestamps();
         });

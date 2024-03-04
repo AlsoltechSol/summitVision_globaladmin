@@ -21,6 +21,8 @@ class Company extends Model
         'database_create_and_config',
         'fileop',
         'modify_env',
+        'server_config_status',
+        'is_verified',
     ];
 
 }

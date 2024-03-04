@@ -54,6 +54,7 @@
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Password') }}</th>
                                     <th>{{ __('Mobile') }}</th>
+                                    <th>{{ __('Server Config')}}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -66,6 +67,13 @@
                                     <td>{{ $company->email }}</td>
                                     <td>{{ substr($company->password, 0, 8) }}...</td>
                                     <td>{{ $company->mobile }}</td>
+                                    <td>
+                                        @if($company->server_config_status == 1)
+                                        <i class="ti ti-check text-success" style="font-size: 16px; font-weight: 500;"></i>
+                                        @else
+                                        <i class="ti ti-square-x text-danger" style="font-size: 16px; font-weight: 500;"></i>
+                                        @endif
+                                    </td>
                                     <td>
                                      <a href="#" data-url="{{ route('companies.edit', $company->id) }}" data-ajax-popup="true"
                                           data-title="{{ __('Edit Company') }}" data-size="md" data-bs-toggle="tooltip" title=""

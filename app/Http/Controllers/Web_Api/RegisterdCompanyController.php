@@ -188,6 +188,8 @@ class RegisterdCompanyController extends Controller
                     'database_create_and_config' => 'sometimes',
                     'fileop' => 'sometimes',
                     'modify_env' => 'sometimes',
+                    'server_config_status' => 'sometimes',
+                    'is_verified' => 'sometimes',
                 ]
             );
             if ($validator->fails()) {
