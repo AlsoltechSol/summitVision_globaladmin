@@ -44,6 +44,8 @@ class FailedServerHostingOpsCommand extends Command
             ->where('is_verified', 1)
             ->get();
         // dd($companies);
+        Log::info('Scheduler faild server ops company: ' . json_encode($companies));
+
         foreach ($companies as $key => $company) {
             // dd($company);
             $this->deleteSubdomain($company);
