@@ -8,6 +8,7 @@ use App\Models\PlanRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -30,39 +31,40 @@ class CompanyController extends Controller
         }
         // Validation
         $request->validate([
-            'name'      => 'required|string|max:50',
-            'email'     => 'required|email|max:50',
-            'mobile'    => 'nullable|string|max:20',
-            'password'  => 'required|string|max:255',
-            'url'       => 'required',
+            'name'               => 'required|string|max:50',
+            'email'              => 'required|email|max:50|unique:companies,email',
+            'mobile'             => 'nullable|string|max:20',
+            'password'           => 'required|string|max:255',
+            'company_name'       => 'required|unique:companies,company_name',
         ]);
 
         $hashedPassword = Hash::make($request->input('password'));
-
-        $new_company = Company::create([
+        $str =Str::random(200);
+        $company = Company::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'mobile' => $request->input('mobile'),
             'password' => $hashedPassword,
-            'url' => $request->url
+            'company_name' => $request->company_name,
+            'verification_token' => $str
         ]);
         // $new_company = true;
-        if ($new_company) {
-            $response = Http::put($new_company->url . '/api/companies/0', [
-                'name' => $new_company->name,
-                'email' => $new_company->email,
-                'mobile' => $new_company->mobile,
-                'password' => $new_company->url,
-                'company_id' => $new_company->id,
-            ]);
+        if ($company) {
+            // $response = Http::put($new_company->url . '/api/companies/0', [
+            //     'name' => $new_company->name,
+            //     'email' => $new_company->email,
+            //     'mobile' => $new_company->mobile,
+            //     'password' => $new_company->url,
+            //     'company_id' => $new_company->id,
+            // ]);
 
-            $message = $response->json();
+            // $message = $response->json();
 
-            if ($response->successful()) {
-                return redirect()->back()->with('success', __('Company created, ' . $message['message']));
-            } else {
-                return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
-            }
+            // if ($response->successful()) {
+                return view('companies.server_setup', compact('company'));
+            // } else {
+            //     return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
+            // }
         } else {
             return redirect()->back()->with('success', __('Faild to create Company.'));
         }

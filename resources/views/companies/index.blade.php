@@ -55,6 +55,7 @@
                                     <th>{{ __('Password') }}</th>
                                     <th>{{ __('Mobile') }}</th>
                                     <th>{{ __('Server Config')}}</th>
+                                    <th>{{ __('Server Config By Cron')}}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -64,7 +65,13 @@
                                 <tr>
                                     <td>{{ $company->id }}</td>
                                     <td>{{ $company->name }}</td>
-                                    <td>{{ $company->email }}</td>
+                                    <td>
+                                        @if($company->is_verified == 1)
+                                        <a class=" text-success" title="verified">{{ $company->email }}</a>
+                                        @else
+                                        <a class="text-danger" title="not verified">{{ $company->email }}</a>
+                                        @endif
+                                    </td>
                                     <td>{{ substr($company->password, 0, 8) }}...</td>
                                     <td>{{ $company->mobile }}</td>
                                     <td>
@@ -72,6 +79,16 @@
                                         <i class="ti ti-check text-success" style="font-size: 16px; font-weight: 500;"></i>
                                         @else
                                         <i class="ti ti-square-x text-danger" style="font-size: 16px; font-weight: 500;"></i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                       
+                                        @if($company->setup_by_cron == null)
+                                        Never Executed
+                                        @elseif($company->setup_by_cron == 0)
+                                        Faild
+                                        @else
+                                        Success
                                         @endif
                                     </td>
                                     <td>
