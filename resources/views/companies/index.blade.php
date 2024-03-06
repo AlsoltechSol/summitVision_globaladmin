@@ -97,7 +97,9 @@
                                           class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Edit') }}">
                                           <i class="ti ti-pencil"></i>
                                      </a>
-                                     <a href="{{ route('companies.show', $company->id) }}" class="btn btn-sm btn-primary">
+                                     <a href="#" data-url="{{ route('companies.show', $company->id) }}" class="btn btn-sm btn-primary" data-ajax-popup="true"
+                                          data-title="{{ __('Show Company data') }}" data-size="md" data-bs-toggle="tooltip" title=""
+                                           data-bs-original-title="{{ __('Show') }}">
                                           <i class="ti ti-eye"></i>
                                      </a>
                                      <a href="{{ route('companies.settings', $company->id) }}" class="btn btn-sm btn-primary">

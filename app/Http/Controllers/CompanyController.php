@@ -75,14 +75,9 @@ class CompanyController extends Controller
 
     public function show($id)
     {
-        if (Auth::user()->type != 'super admin') {
-            return redirect()->back()->with('error', __('Access denied.'));
-        }
-        // $company = Company::findOrFail($id);
+        $company = Company::where('id', $id)->first();
 
-        
-        // dd($companyInfo);
-        return view('companies.show', compact('companyInfo', 'company'));
+        return view('companies.show', compact('company'));
     }
 
     public function company_settings($id)
