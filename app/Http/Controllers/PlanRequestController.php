@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Excel;
+use Illuminate\Support\Facades\DB;
 
 class PlanRequestController extends Controller
 {
@@ -31,20 +32,20 @@ class PlanRequestController extends Controller
             if (!empty($request->start_date)) {
                 $plan_requests->where('created_at', '>=', $request->start_date);
             }
-            
+
             if (!empty($request->end_date)) {
                 $plan_requests->where('created_at', '<=', $request->end_date);
             }
-            
+
             if (!empty($request->company_id)) {
                 $plan_requests->where('company_id', $request->company_id);
             }
-            
+
             $plan_requests = $plan_requests->get();
-            
+
             $companies = Company::select('id', 'name')->pluck('name', 'id')->toArray();
             $companies = ['' => 'All'] + $companies;
-            
+
             // dd($plan_requests, $companies);
             return view('plan_request.index', compact('plan_requests', 'companies'));
         } else {
@@ -121,8 +122,9 @@ class PlanRequestController extends Controller
     */
     public function acceptRequest($id, $response)
     {
+        DB::beginTransaction();
         if (Auth::user()->type == 'super admin' || Gate::check('Manage Plan Request')) {
-
+            
             $plan_request = PlanRequest::find($id);
             $company = Company::where('id', $plan_request->company_id)->first();
 
@@ -154,22 +156,24 @@ class PlanRequestController extends Controller
                             'receipt' => null,
                             'user_id' => $plan_request->user_id,
                         ]);
-                         
+
                         if ($new_order) {
-                            
+                            // dd($company);
                             $put_accept_data = Http::post($company->url . '/api/plan_request_accept_or_reject/' . $id . '/' . $response, [
                                 'new_order' => json_encode($new_order)
                             ]);
 
                             $put_accept_data = $put_accept_data->json();
                             // dd($put_accept_data);
-                            if ($put_accept_data['status'] == 200) {
+                            if ($put_accept_data && $put_accept_data['status'] == 200) {
                                 $plan_request->delete();
+                                DB::commit();
                                 return redirect()->back()->with('success', __($put_accept_data['message']));
                             } else {
-                                return redirect()->back()->with('error', __($put_accept_data['message']));
+                                return redirect()->back()->with('error', __($put_accept_data ? $put_accept_data['message'] : 'Something went wrong.'));
                             }
-                        } 
+                        }
+
                         return redirect()->back()->with('error', __('Plan fail to upgrade.'));
                     } else {
                         return redirect()->back()->with('error', __('Plan Not found.'));
@@ -179,18 +183,21 @@ class PlanRequestController extends Controller
 
                     $put_accept_data = $put_accept_data->json();
 
-                    // dd($put_accept_data['status'] );
+                    // dd($put_accept_data );
                     if ($put_accept_data['status'] == 200) {
                         $plan_request->delete();
+                        DB::commit();
                         return redirect()->back()->with('success', __($put_accept_data['message']));
                     } else {
                         return redirect()->back()->with('error', __($put_accept_data['message']));
                     }
                 }
             } else {
+                DB::rollback();
                 return redirect()->back()->with('error', __('Something went wrong.'));
             }
         } else {
+            DB::rollback();
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }

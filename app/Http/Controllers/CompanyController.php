@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\PlanRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -39,7 +40,7 @@ class CompanyController extends Controller
         ]);
 
         $hashedPassword = Hash::make($request->input('password'));
-        $str =Str::random(200);
+        $str = Str::random(200);
         $company = Company::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -61,7 +62,7 @@ class CompanyController extends Controller
             // $message = $response->json();
 
             // if ($response->successful()) {
-                return view('companies.server_setup', compact('company'));
+            return view('companies.server_setup', compact('company'));
             // } else {
             //     return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
             // }
@@ -87,29 +88,29 @@ class CompanyController extends Controller
         }
         $company = Company::findOrFail($id);
 
-        
+
         // dd($companyInfo);
         return view('companies.company_settings', compact('company'));
     }
 
-    public function company_storage_setting_store(Request $request, $company){
+    public function company_storage_setting_store(Request $request, $company)
+    {
         // dd($company);
 
-       $company = Company::find($company);
-       if (!$company) {
-        return redirect()->back()->with('error', __('Company Not Found.'));
-       }
-       $response = Http::post($company->url . '/api/storage-settings', $request);
+        $company = Company::find($company);
+        if (!$company) {
+            return redirect()->back()->with('error', __('Company Not Found.'));
+        }
+        $response = Http::post($company->url . '/api/storage-settings', $request);
 
-       $response = $response->json();
+        $response = $response->json();
 
-       if ($response['status'] == 200) {
-            
-        return redirect()->back()->with('success', __($response['message']));
-       } else {
-        return redirect()->back()->with('error', __($response['message']));
-       }
-       
+        if ($response['status'] == 200) {
+
+            return redirect()->back()->with('success', __($response['message']));
+        } else {
+            return redirect()->back()->with('error', __($response['message']));
+        }
     }
 
     public function edit($id)
@@ -125,18 +126,27 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
-
+        DB::beginTransaction();
         if (Auth::user()->type != 'super admin') {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-        // Validation
-        $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:50',
-            'mobile' => 'nullable|string|max:20',
-            'password' => 'nullable|string|max:255',
-            'url' => 'required'
-        ]);
+
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string|max:50',
+                'email' => 'required|email|max:50',
+                'mobile' => 'nullable|string|max:20',
+                'password' => 'nullable|string|max:255',
+                'url' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+
+            return redirect()->back()->with('error', $messages->first());
+        }
 
         $hashedPassword = Hash::make($request->input('password'));
 
@@ -161,11 +171,14 @@ class CompanyController extends Controller
             ]);
             $message = $response->json();
             if ($response->successful()) {
+                DB::commit();
                 return redirect()->back()->with('success', __('Company updated, ' . $message['message']));
             } else {
+                DB::rollback();
                 return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . $message['message']));
             }
         } else {
+            DB::rollback();
             return redirect()->back()->with('error', __('Failed to create company'));
         }
     }

@@ -19,12 +19,14 @@
                 {!! Form::text('company_name', isset($company) ? $company->email : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter company name']) !!}
             </div>
         </div>
-        {{-- <div class="form-group">
+        @if(isset($company))
+        <div class="form-group">
             {{ Form::label('url', __('Url'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
                 {!! Form::text('url', isset($company) ? $company->url : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter Url']) !!}
             </div>
-        </div> --}}
+        </div> 
+        @endif
         <div class="form-group">
             {{ Form::label('mobile', __('Mobile'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
