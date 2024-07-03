@@ -42,26 +42,7 @@
                 <div class="card-header card-body table-border-style">
 
                     <div class="p-3 table-responsive">
-                        @php
-                        $url = $company->url . '/api/get_settings_details';
-                        $options = [
-                        'http' => [
-                        'method' => 'POST',
-                        'header' => 'Content-type: application/x-www-form-urlencoded',
-                        'ignore_errors' => true,
-                        ],
-                        ];
-                        $context = stream_context_create($options);
-                        $json_data = file_get_contents($url, false, $context);
-                        $data = json_decode($json_data, true);
-
-                        // Access the data as needed
-                        $setting = $data['setting'];
-                        $file_type = $data['file_type'];
-                        $local_storage_validations = $data['local_storage_validations'];
-                        $s3_storage_validations = $data['s3_storage_validations'];
-                        $wasabi_storage_validations = $data['wasabi_storage_validations'];
-                        @endphp
+                        
 
                         <!--storage Setting-->
                         <div id="storage-settings" class="">

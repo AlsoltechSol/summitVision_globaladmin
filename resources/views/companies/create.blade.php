@@ -16,7 +16,7 @@
         <div class="form-group">
             {{ Form::label('company_name', __('Company Name'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
-                {!! Form::text('company_name', isset($company) ? $company->email : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter company name']) !!}
+                {!! Form::text('company_name', isset($company) ? $company->company_name : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter company name']) !!}
             </div>
         </div>
         @if(isset($company))
