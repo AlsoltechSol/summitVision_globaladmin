@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web_Api\LandingPageController;
 use App\Http\Controllers\Web_Api\PlanRequestController;
 use App\Http\Controllers\Web_Api\RegisterdCompanyController;
+use App\Models\Company;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,21 @@ Route::resource('register_company', RegisterdCompanyController::class);
 Route::post('register_company_resend_email', [RegisterdCompanyController::class, 'register_company_resend_email']);
 Route::post('verify_token', [RegisterdCompanyController::class, 'verify_token']);
 Route::post('update_company_setup', [RegisterdCompanyController::class, 'update_company_setup']);
+
+
+/*
+|--------------------------------------------------------------------------
+|                              APP APIS
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/check-company', function(Request $request) {
+    $companyName = $request->input('company_name'); 
+    $company = Company::whereRaw('lower(company_name) = ?', strtolower($companyName))->first();
+
+    if ($company) {
+        return response()->json(['status' => 200, 'message' => "Company found", 'url' => $company->url], 200);
+    } else {
+        return response()->json(['status' => 404, 'message' => "This Company name is not registered with us.", 'url' => null], 404);
+    }
+});

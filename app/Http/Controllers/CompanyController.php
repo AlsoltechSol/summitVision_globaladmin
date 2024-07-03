@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -27,51 +28,57 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
 
-        if (Auth::user()->type != 'super admin') {
-            return redirect()->back()->with('error', __('Permission denied.'));
+        try {
+            //code...
+
+            if (Auth::user()->type != 'super admin') {
+                return redirect()->back()->with('error', __('Permission denied.'));
+            }
+            // Validation
+            $request->validate([
+                'name'               => 'required|string|max:50',
+                'email'              => 'required|email|max:50|unique:companies,email',
+                'mobile'             => 'nullable|string|max:20',
+                'password'           => 'required|string|max:255',
+                'company_name'       => 'required|unique:companies,company_name',
+            ]);
+
+            $hashedPassword = Hash::make($request->input('password'));
+            $str = Str::random(200);
+            $company = Company::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'mobile' => $request->input('mobile'),
+                'password' => $hashedPassword,
+                'company_name' => $request->company_name,
+                'verification_token' => $str
+            ]);
+            // $new_company = true;
+            if ($company) {
+                // $response = Http::put($new_company->url . '/api/companies/0', [
+                //     'name' => $new_company->name,
+                //     'email' => $new_company->email,
+                //     'mobile' => $new_company->mobile,
+                //     'password' => $new_company->url,
+                //     'company_id' => $new_company->id,
+                // ]);
+
+                // $message = $response->json();
+
+                // if ($response->successful()) {
+                return view('companies.server_setup', compact('company'));
+                // } else {
+                //     return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
+                // }
+            } else {
+                return redirect()->back()->with('success', __('Faild to create Company.'));
+            }
+
+            // Redirect or return a response as needed
+            return redirect()->route('companies.index')->with('success', 'Company created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('companies.index')->with('error', $e->getMessage());
         }
-        // Validation
-        $request->validate([
-            'name'               => 'required|string|max:50',
-            'email'              => 'required|email|max:50|unique:companies,email',
-            'mobile'             => 'nullable|string|max:20',
-            'password'           => 'required|string|max:255',
-            'company_name'       => 'required|unique:companies,company_name',
-        ]);
-
-        $hashedPassword = Hash::make($request->input('password'));
-        $str = Str::random(200);
-        $company = Company::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'mobile' => $request->input('mobile'),
-            'password' => $hashedPassword,
-            'company_name' => $request->company_name,
-            'verification_token' => $str
-        ]);
-        // $new_company = true;
-        if ($company) {
-            // $response = Http::put($new_company->url . '/api/companies/0', [
-            //     'name' => $new_company->name,
-            //     'email' => $new_company->email,
-            //     'mobile' => $new_company->mobile,
-            //     'password' => $new_company->url,
-            //     'company_id' => $new_company->id,
-            // ]);
-
-            // $message = $response->json();
-
-            // if ($response->successful()) {
-            return view('companies.server_setup', compact('company'));
-            // } else {
-            //     return redirect()->back()->with('error', __('Faild to update company data error: ' . $message['message']));
-            // }
-        } else {
-            return redirect()->back()->with('success', __('Faild to create Company.'));
-        }
-
-        // Redirect or return a response as needed
-        return redirect()->route('companies.index')->with('success', 'Company created successfully.');
     }
 
     public function show($id)
@@ -83,14 +90,41 @@ class CompanyController extends Controller
 
     public function company_settings($id)
     {
-        if (Auth::user()->type != 'super admin') {
-            return redirect()->back()->with('error', __('Access denied.'));
+        try {
+
+            if (Auth::user()->type != 'super admin') {
+                return redirect()->back()->with('error', __('Access denied.'));
+            }
+            $company = Company::findOrFail($id);
+
+            if ($company) {
+                $url = $company->url . '/api/get_settings_details';
+                $options = [
+                    'http' => [
+                        'method' => 'POST',
+                        'header' => 'Content-type: application/x-www-form-urlencoded',
+                        'ignore_errors' => true,
+                    ],
+                ];
+                $context = stream_context_create($options);
+                $json_data = file_get_contents($url, false, $context);
+                $data = json_decode($json_data, true);
+
+                // Access the data as needed
+                $setting = $data['setting'];
+                $file_type = $data['file_type'];
+                $local_storage_validations = $data['local_storage_validations'];
+                $s3_storage_validations = $data['s3_storage_validations'];
+                $wasabi_storage_validations = $data['wasabi_storage_validations'];
+
+                return view('companies.company_settings', compact('company', 'setting', 'file_type', 'local_storage_validations', 's3_storage_validations', 'wasabi_storage_validations'));
+            } else {
+                return redirect()->back()->with('error', __('Company Not Found.'));
+            }
+            //code...
+        } catch (\Exception $th) {
+            return redirect()->route('companies.index')->with('error', 'Something went wrong, this company pannel may not configured correctly');
         }
-        $company = Company::findOrFail($id);
-
-
-        // dd($companyInfo);
-        return view('companies.company_settings', compact('company'));
     }
 
     public function company_storage_setting_store(Request $request, $company)
@@ -156,6 +190,7 @@ class CompanyController extends Controller
         $company->name = $request->input('name');
         $company->email = $request->input('email');
         $company->mobile = $request->input('mobile');
+        $company->company_name = $request->input('company_name');
 
         if ($request->has('password')) {
             $company->password = bcrypt($request->input('password'));
@@ -170,12 +205,14 @@ class CompanyController extends Controller
                 'company_id' => $company->id,
             ]);
             $message = $response->json();
+
+            // dd($message);
             if ($response->successful()) {
                 DB::commit();
                 return redirect()->back()->with('success', __('Company updated, ' . $message['message']));
             } else {
                 DB::rollback();
-                return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . $message['message']));
+                return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . isset($message['message']) ? $message['message'] : ''));
             }
         } else {
             DB::rollback();
@@ -183,15 +220,97 @@ class CompanyController extends Controller
         }
     }
 
-
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $company = Company::findOrFail($id);
+
+            $deleteFaildServerSetupCompany = $request->has('delete_faild_server_setup_company');
+            $deleteSubdomain = $request->input('delete_subdomain') == 1;
+            $deleteDatabase = $request->input('delete_database') == 1;
+            $deleteProjectDirectory = $request->input('delete_project_directory') == 1;
+
+            if (!$deleteFaildServerSetupCompany) {
+                $this->deleteSubdomain($company);
+                $this->deleteDatabase($company);
+                $this->deleteUsername($company);
+                $this->fileopTrash($company);
+
+                $company->delete();
+                return redirect()->back()->with('success', __('Company deleted successfully'));
+            }
+
+            if ($deleteSubdomain) {
+                $this->deleteSubdomain($company);
+            }
+
+            if ($deleteDatabase) {
+                $this->deleteDatabase($company);
+                $this->deleteUsername($company);
+            }
+
+            if ($deleteProjectDirectory) {
+                $this->fileopTrash($company);
+            }
             $company->delete();
-            redirect()->back()->with('success', __('Company deleted successfully'));
+
+            return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', __('Internal Server Error. Unable to delete the company.'));
         }
+    }
+
+
+    private function deleteSubdomain($company)
+    {
+
+        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/deleteSubdomain', $company);
+        $responseData = $response->json();
+        //    dd($responseData);
+
+        if ($responseData['status'] !== 200) {
+            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+        }
+
+        return true;
+    }
+
+    private function deleteDatabase($company)
+    {
+        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/deleteDatabase', $company);
+        $responseData = $response->json();
+        // dd($responseData);
+        if ($responseData['status'] !== 200) {
+            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            // return false;
+        }
+
+        return true;
+    }
+
+    private function deleteUsername($company)
+    {
+        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/deleteUsername', $company);
+        $responseData = $response->json();
+
+        if ($responseData['status'] !== 200) {
+            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            // return false;
+        }
+
+        return true;
+    }
+
+    private function fileopTrash($company)
+    {
+        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/file_op_trash', $company);
+        $responseData = $response->json();
+        // dd($responseData);
+        if ($responseData['status'] !== 200) {
+            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            // return false;
+        }
+        $company->DB_PASSWORD = NULL;
+        return true;
     }
 }
