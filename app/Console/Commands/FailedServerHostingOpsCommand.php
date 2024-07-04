@@ -64,8 +64,8 @@ class FailedServerHostingOpsCommand extends Command
                 
             }
 
-            $company->setup_by_cron = $company->setup_by_cron < 3 || !$company->setup_by_cron ? ++$company->setup_by_cron : 0;
-            $company->save();
+            $company->setup_by_cron = ($company->setup_by_cron < 3 || !$company->setup_by_cron) ? $company->setup_by_cron + 1 : 0;
+            $company->save();            
             
         }
 

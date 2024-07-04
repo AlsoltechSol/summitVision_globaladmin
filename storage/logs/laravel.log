@@ -2200,3 +2200,4 @@ Stack trace:
 #62 C:\\xampp\\htdocs\\summithrmGlobalAdmin\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('...')
 #63 {main}
 "} 
+[2024-07-04 10:23:20] local.INFO: Scheduler faild server ops executed at: 2024-07-04 10:23:19  
