@@ -16,8 +16,14 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $companies = Company::all();
+        $companies = Company::where('is_deleted', 0)->get();
         return view('companies.index', compact('companies'));
+    }
+
+    public function trash()
+    {
+        $companies = Company::where('is_deleted', 1)->get();
+        return view('companies.trash', compact('companies'));
     }
 
     public function create()
@@ -86,6 +92,21 @@ class CompanyController extends Controller
         $company = Company::where('id', $id)->first();
 
         return view('companies.show', compact('company'));
+    }
+
+    public function restore($id)
+    {
+        $company = Company::where('id', $id)->first();
+
+        if ($company) {
+
+            $company->is_deleted = 0;
+            $company->deleted_at = null;
+            $company->save();
+            return redirect()->back()->with('success', __('Company Successfully restored.'));
+        } else {
+            return redirect()->back()->with('error', __('Company Not Found.'));
+        }
     }
 
     public function company_settings($id)
@@ -198,21 +219,26 @@ class CompanyController extends Controller
         $company->url = $request->url;
 
         if ($company->save()) {
-            $response = Http::put($company->url . '/api/companies/0', [
-                'name' => $company->name,
-                'email' => $company->email,
-                'password' => $company->password,
-                'company_id' => $company->id,
-            ]);
-            $message = $response->json();
 
-            // dd($message);
-            if ($response->successful()) {
-                DB::commit();
-                return redirect()->back()->with('success', __('Company updated, ' . $message['message']));
-            } else {
-                DB::rollback();
-                return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . isset($message['message']) ? $message['message'] : ''));
+            try {
+                $response = Http::put($company->url . '/api/companies/0', [
+                    'name' => $company->name,
+                    'email' => $company->email,
+                    'password' => $company->password,
+                    'company_id' => $company->id,
+                ]);
+                $message = $response->json();
+
+                // dd($message);
+                if ($response->successful()) {
+                    DB::commit();
+                    return redirect()->back()->with('success', __('Company updated, ' . $message['message']));
+                } else {
+                    DB::rollback();
+                    return redirect()->back()->with('error', __('Failed to update data to company admin panel, response: ' . isset($message['message']) ? $message['message'] : ''));
+                }
+            } catch (\Exception $th) {
+                return redirect()->back()->with('error', __('Failed to update company pannel make sure company pannel is configured properly'));
             }
         } else {
             DB::rollback();
@@ -236,7 +262,9 @@ class CompanyController extends Controller
                 $this->deleteUsername($company);
                 $this->fileopTrash($company);
 
-                $company->delete();
+                $company->is_deleted = 1;
+                $company->deleted_at = now();
+                $company->save();
                 return redirect()->back()->with('success', __('Company deleted successfully'));
             }
 
@@ -252,7 +280,9 @@ class CompanyController extends Controller
             if ($deleteProjectDirectory) {
                 $this->fileopTrash($company);
             }
-            $company->delete();
+            $company->is_deleted = 1;
+            $company->deleted_at = now();
+            $company->save();
 
             return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
         } catch (\Exception $e) {

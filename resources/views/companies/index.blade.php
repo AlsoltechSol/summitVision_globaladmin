@@ -10,14 +10,15 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
-@if (\Auth::user()->type == 'super admin')
 <li class="breadcrumb-item">{{ __('Companies') }}</li>
-@else
-<li class="breadcrumb-item">{{ __('Users') }}</li>
-@endif
+
 @endsection
 
 @section('action-button')
+
+<a href="{{ route('companies.deleted') }}"  class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Deleted companies') }}">
+    <i class="ti ti-trash"></i>
+</a>
 
 @if (\Auth::user()->type == 'super admin' || Gate::check('Create Companies'))
 <a href="#" data-url="{{ route('companies.create') }}" data-ajax-popup="true" data-title="{{ __('Create New Company') }}" data-size="md" data-bs-toggle="tooltip" title="" class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create') }}">

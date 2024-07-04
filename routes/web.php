@@ -265,6 +265,21 @@ Route::group(['middleware' => ['verified']], function () {
             'XSS',
         ]
     );
+
+    Route::get('deleted-companies', [CompanyController::class, 'trash'])->name('companies.deleted')->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+
+    Route::post('restore/{id}', [CompanyController::class, 'restore'])->name('companies.restore')->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+
     Route::post('company_storage_setting_store/{company}', [CompanyController::class, 'company_storage_setting_store'])->name('company.storage.setting.store')->middleware(
         [
             'auth',
