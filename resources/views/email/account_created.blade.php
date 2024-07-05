@@ -194,6 +194,7 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
+                                                            <p style="margin: 10px 0;">{{__("Company Name: ". $company['company_name'])}}</p>
                                                             <p style="margin: 10px 0;">{{__("Login Url: ". $company['url'])}}</p>
                                                             <p style="margin: 10px 0;">{{__("Email: ". $company['email'])}}</p>
                                                             {{-- <p style="margin: 10px 0;">{{__("Password: ". $company['password'])}}</p> --}}
@@ -203,6 +204,7 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
+                                                                <p style="margin: 10px 0;"><i style="font-style:normal"><strong>Note:</strong> Use the Exact company name to connect with our Summit connect android/ios app</p>
                                                                 <p style="margin: 10px 0;"><i style="font-style:normal">{{__('If you encounter any issues or have questions, please don\'t hesitate to contact us.' )}}</i></p>
                                                                 <p style="margin: 10px 0;"><i style="font-style:normal">{{__('Thank you for choosing our service.')}}</i></p>
                                                             </div>
