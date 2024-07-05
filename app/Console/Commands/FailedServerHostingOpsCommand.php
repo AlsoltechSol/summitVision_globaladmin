@@ -258,7 +258,7 @@ class FailedServerHostingOpsCommand extends Command
         // dd($req);
         $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/upload_env', $req);
         $responseData = $response->json();
-        dd($responseData);
+
         if ($responseData['status'] !== 200) {
             Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
             // return false;

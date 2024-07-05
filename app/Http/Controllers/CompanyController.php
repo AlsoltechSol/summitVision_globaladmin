@@ -265,7 +265,7 @@ class CompanyController extends Controller
                 $company->is_deleted = 1;
                 $company->deleted_at = now();
                 $company->save();
-                return redirect()->back()->with('success', __('Company deleted successfully'));
+                return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
             }
 
             if ($deleteSubdomain) {
@@ -286,7 +286,7 @@ class CompanyController extends Controller
 
             return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', __('Internal Server Error. Unable to delete the company.'));
+            return redirect()->route('companies.index')->with('error', __('Internal Server Error. Unable to delete the company.'));
         }
     }
 
