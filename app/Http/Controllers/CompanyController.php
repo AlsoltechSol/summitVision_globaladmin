@@ -265,7 +265,8 @@ class CompanyController extends Controller
                 $company->is_deleted = 1;
                 $company->deleted_at = now();
                 $company->save();
-                return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
+                // dd($company);
+                return redirect()->route('companies.index')->with('success', "Company deleted successfully");
             }
 
             if ($deleteSubdomain) {
@@ -284,9 +285,9 @@ class CompanyController extends Controller
             $company->deleted_at = now();
             $company->save();
 
-            return redirect()->route('companies.index')->with('success', __('Company deleted successfully'));
+            return redirect()->route('companies.index')->with('success', "Company deleted successfully");
         } catch (\Exception $e) {
-            return redirect()->route('companies.index')->with('error', __('Internal Server Error. Unable to delete the company.'));
+            return redirect()->route('companies.index')->with('error', "Internal Server Error. Unable to delete the company.");
         }
     }
 
@@ -299,7 +300,7 @@ class CompanyController extends Controller
         //    dd($responseData);
 
         if ($responseData['status'] !== 200) {
-            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            Log::error('An error occurred in Scheduler faild server ops (hits from destroy op): ' . json_encode($responseData));
         }
 
         return true;
@@ -311,7 +312,7 @@ class CompanyController extends Controller
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
-            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            Log::error('An error occurred in Scheduler faild server ops (hits from destroy op):: ' . json_encode($responseData));
             // return false;
         }
 
@@ -324,7 +325,7 @@ class CompanyController extends Controller
         $responseData = $response->json();
 
         if ($responseData['status'] !== 200) {
-            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            Log::error('An error occurred in Scheduler faild server ops (hits from destroy op):: ' . json_encode($responseData));
             // return false;
         }
 
@@ -337,7 +338,7 @@ class CompanyController extends Controller
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
-            Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
+            Log::error('An error occurred in Scheduler faild server ops (hits from destroy op): ' . json_encode($responseData));
             // return false;
         }
         $company->DB_PASSWORD = NULL;
