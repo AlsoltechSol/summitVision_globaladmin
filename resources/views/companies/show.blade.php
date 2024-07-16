@@ -4,7 +4,7 @@
             <p><strong>Name:</strong> {{ $company->name }}</p>
             <p><strong>Email:</strong> {{ $company->email }}</p>
             <p><strong>Mobile:</strong> {{ $company->mobile }}</p>
-            <p><strong>Password:</strong> {{ $company->password }}</p>
+            {{-- <p><strong>Password:</strong> {{ $company->password }}</p> --}}
             <p><strong>URL:</strong> {{ $company->url }}</p>
             <p><strong>Is Verified:</strong> {{ $company->is_verified == 1 ? 'Verified' : 'Non verified'}}</p>
             <p><strong>Server Config Status:</strong> {{ $company->server_config_status == 1 ? 'Success' : 'Faild'}}</p>
