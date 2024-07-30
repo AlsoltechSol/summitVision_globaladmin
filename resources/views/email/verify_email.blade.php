@@ -171,8 +171,8 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                                                <p style=" line-height:32px"><b style="font-weight:700">{{__('Subject : ').'Verify Your Email Address'}}</b></p>
-                                                                <p style="line-height:32px"><b style="font-weight:700">{{__('Hi ').$company['name'].','}}</b></p>
+                                                                
+                                                                <p style="line-height:32px"><b style="font-weight:700">{{__('Hi '). ucwords($company['name']) .','}}</b></p>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -180,7 +180,9 @@ $logo=\App\Models\Utility::get_file('uploads/logo/');
                                                     <tr>
                                                         <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                                                             <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                                                                <p style="margin: 10px 0;">{{__('Hope this email ﬁnds you well! , Thank you for signing up with our service. To complete your registration, please verify your email address by clicking the link below: ')}}</p>
+                                                                <p style="margin: 10px 0;">
+                                                                    {{ __('Hope this email finds you well! Thank you for signing up for our service. To complete your registration, please verify your email address by clicking the link below:') }}
+                                                                  </p>
                                                             </div>
                                                         </td>
                                                     </tr>

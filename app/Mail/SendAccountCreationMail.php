@@ -28,7 +28,7 @@ class SendAccountCreationMail extends Mailable
 
     public function build(){
         
-        return $this->from(env('MAIL_FROM_ADDRESS'), $this->company['email'])->markdown('email.account_created')->subject('Regarding Successfull account creation.')->with('company', $this->company);
+        return $this->from(env('MAIL_FROM_ADDRESS'), $this->company['email'])->markdown('email.account_created')->subject('Welcome to ' . env('APP_NAME') .' your account Successfull created.')->with('company', $this->company);
     }
     /**
      * Get the message envelope.
@@ -38,7 +38,7 @@ class SendAccountCreationMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Your Account successfully Hosted.',
+            subject: 'Welcome to ' . env('APP_NAME') .' your account Successfull created.',
         );
     }
 
