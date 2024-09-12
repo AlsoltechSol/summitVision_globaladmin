@@ -264,7 +264,7 @@ class CompanyController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy_company(Request $request, $id)
     {
         try {
             $company = Company::findOrFail($id);
@@ -273,6 +273,8 @@ class CompanyController extends Controller
             $deleteSubdomain = $request->input('delete_subdomain') == 1;
             $deleteDatabase = $request->input('delete_database') == 1;
             $deleteProjectDirectory = $request->input('delete_project_directory') == 1;
+            $destroy_company_permanent = $request->input('delete_permanent') == 1;
+            // dd($request, $company);
 
             if (!$deleteFaildServerSetupCompany) {
                 $this->deleteSubdomain($company);
@@ -302,6 +304,10 @@ class CompanyController extends Controller
             $company->is_deleted = 1;
             $company->deleted_at = now();
             $company->save();
+
+            if($destroy_company_permanent){
+                $company->delete();
+            }
 
             return redirect()->route('companies.index')->with('success', "Company deleted successfully");
         } catch (\Exception $e) {

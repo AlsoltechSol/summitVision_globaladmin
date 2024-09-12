@@ -266,6 +266,15 @@ Route::group(['middleware' => ['verified']], function () {
         ]
     );
 
+    Route::post('companies/delete/{id}', [CompanyController::class, 'destroy_company'])->name('companies.destroy_company')->middleware(
+        [
+            'auth',
+            'XSS',
+        ]
+    );
+
+
+
     Route::get('deleted-companies', [CompanyController::class, 'trash'])->name('companies.deleted')->middleware(
         [
             'auth',
