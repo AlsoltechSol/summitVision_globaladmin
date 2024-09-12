@@ -37,40 +37,42 @@ class FailedServerHostingOpsCommand extends Command
     public function handle()
     {
 
-        try {
-            //code...
+        Log::info('Scheduler faild server ops executed at: ' . now());
 
-            Log::info('Scheduler faild server ops executed at: ' . now());
+        $companies = Company::where('server_setup_started_at', '<', now()->subMinutes(5))
+            ->where(function ($query) {
+                $query->where('server_config_status', '!=', 1)
+                    ->orWhereNull('server_config_status');
+            })
+            ->where('is_verified', 1)
+            ->get();
+        // dd($companies);
 
-            $companies = Company::where('server_setup_started_at', '<', now()->subMinutes(5))
-                ->where('server_config_status', '!=', 1)
-                ->where('is_verified', 1)
-                ->get();
-            // dd($companies);
-            Log::info('Scheduler faild server ops company: ' . json_encode($companies));
 
-            foreach ($companies as $key => $company) {
-                // dd($company);
-                $this->deleteSubdomain($company);
-                $this->deleteDatabase($company);
-                $this->deleteUsername($company);
-                $this->fileopTrash($company);
+        // 
+        // ->get();
+        // dd($companies);
+        Log::info('Scheduler faild server ops company correct 7: ' . json_encode($companies[0]));
 
-                if ($company->setup_by_cron != 0) {
-                    $this->create_subdomain_and_dir($company);
-                    $this->createDatabaseAndPutData($company);
-                    $this->create_user($company);
-                    $this->set_privileges_on_database($company);
-                    $this->importSQLFile($company);
-                    $this->fileop($company);
-                    $this->upload_env($company);
-                }
+        foreach ($companies as $key => $company) {
+            // dd($company);
+            $this->deleteSubdomain($company);
+            $this->deleteDatabase($company);
+            $this->deleteUsername($company);
+            $this->fileopTrash($company);
 
-                $company->setup_by_cron = ($company->setup_by_cron < 3 || !$company->setup_by_cron) ? $company->setup_by_cron + 1 : 0;
-                $company->save();
+            if ($company->setup_by_cron != 0) {
+                $this->create_subdomain_and_dir($company);
+                $this->createDatabaseAndPutData($company);
+                $this->create_user($company);
+                $this->set_privileges_on_database($company);
+                $this->importSQLFile($company);
+                $this->fileop($company);
+                $this->upload_env($company);
             }
-        } catch (\Exception $th) {
-            Log::info('Exception while processing failed server hosting operations', $th->getMessage());
+
+            $company->setup_by_cron = ($company->setup_by_cron < 3 && $company->server_config_status == 1) ? $company->setup_by_cron + 1 : 0;
+            $company->save();
         }
 
         return Command::SUCCESS;
@@ -262,7 +264,7 @@ class FailedServerHostingOpsCommand extends Command
         // dd($req);
         $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/upload_env', $req);
         $responseData = $response->json();
-
+        // dd($responseData);
         if ($responseData['status'] !== 200) {
             Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
             // return false;

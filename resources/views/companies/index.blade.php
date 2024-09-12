@@ -85,8 +85,8 @@ $profile = \App\Models\Utility::get_file('uploads/avatar/');
                                         @if($company->setup_by_cron == null)
                                         Never Executed
                                         @elseif($company->setup_by_cron == 0)
-                                        Faild
-                                        @else
+                                        Failed
+                                        @elseif($company->server_config_status == 1)
                                         Success
                                         @endif
                                     </td>
