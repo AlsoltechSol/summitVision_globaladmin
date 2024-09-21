@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web_Api;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailVerification;
 use App\Models\Company;
+use App\Rules\UniqueCompanyName;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -58,9 +59,10 @@ class RegisterdCompanyController extends Controller
                 'company_name' => [
                     'required',
                     'string',
-                    Rule::unique('companies')->where(function ($query) {
-                        $query->where('is_verified', 1);
-                    }),
+                    // Rule::unique('companies')->where(function ($query) {
+                    //     $query->where('is_verified', 1);
+                    // }),
+                    new UniqueCompanyName,
                 ],
                 'email' => [
                     'required',

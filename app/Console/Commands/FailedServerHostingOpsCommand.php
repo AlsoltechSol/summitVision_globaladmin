@@ -40,11 +40,23 @@ class FailedServerHostingOpsCommand extends Command
         Log::info('Scheduler faild server ops executed at: ' . now());
 
         $companies = Company::where('server_setup_started_at', '<', now()->subMinutes(5))
+<<<<<<< HEAD
             ->where('server_config_status', '<>', 1)
+=======
+            ->where(function ($query) {
+                $query->where('server_config_status', '!=', 1)
+                    ->orWhereNull('server_config_status');
+            })
+>>>>>>> dcee0fe1beb67c3bb9ddfeff8bdb885af0b3148f
             ->where('is_verified', 1)
             ->get();
         // dd($companies);
-        Log::info('Scheduler faild server ops company: ' . json_encode($companies));
+
+
+        // 
+        // ->get();
+        // dd($companies);
+        Log::info('Scheduler faild server ops company correct 7: ' . json_encode($companies[0]));
 
         foreach ($companies as $key => $company) {
             // dd($company);
@@ -61,12 +73,10 @@ class FailedServerHostingOpsCommand extends Command
                 $this->importSQLFile($company);
                 $this->fileop($company);
                 $this->upload_env($company);
-                
             }
 
-            $company->setup_by_cron = ($company->setup_by_cron < 3 || !$company->setup_by_cron) ? $company->setup_by_cron + 1 : 0;
-            $company->save();            
-            
+            $company->setup_by_cron = ($company->setup_by_cron < 3 && $company->server_config_status == 1) ? $company->setup_by_cron + 1 : 0;
+            $company->save();
         }
 
         return Command::SUCCESS;
@@ -82,7 +92,7 @@ class FailedServerHostingOpsCommand extends Command
         if ($responseData['status'] !== 200) {
             Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
         }
-       
+
         return true;
     }
 
@@ -258,7 +268,7 @@ class FailedServerHostingOpsCommand extends Command
         // dd($req);
         $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/upload_env', $req);
         $responseData = $response->json();
-
+        // dd($responseData);
         if ($responseData['status'] !== 200) {
             Log::error('An error occurred in Scheduler faild server ops: ' . json_encode($responseData));
             // return false;

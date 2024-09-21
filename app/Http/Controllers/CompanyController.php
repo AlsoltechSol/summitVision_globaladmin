@@ -212,6 +212,24 @@ class CompanyController extends Controller
         $company->email = $request->input('email');
         $company->mobile = $request->input('mobile');
         $company->company_name = $request->input('company_name');
+        $company->url = $request->input('url');
+        $company->is_verified = $request->input('is_verified');
+        $company->plan = $request->input('plan');
+        $company->plan_expire_date = $request->input('plan_expire_date');
+        $company->server_config_status = $request->input('server_config_status');
+        $company->verification_token = $request->input('verification_token');
+        $company->DB_DATABASE = $request->input('DB_DATABASE');
+        $company->DB_USERNAME = $request->input('DB_USERNAME');
+        $company->DB_HOST = $request->input('DB_HOST', 'localhost:3306');
+        $company->DB_PASSWORD = $request->input('DB_PASSWORD');
+        $company->sub_domain = $request->input('sub_domain');
+        // $company->create_domain_and_dir = $request->input('create_domain_and_dir');
+        // $company->database_create_and_config = $request->input('database_create_and_config');
+        // $company->fileop = $request->input('fileop');
+        // $company->modify_env = $request->input('modify_env');
+        // $company->setup_by_cron = $request->input('setup_by_cron');
+        // $company->server_setup_started_at = $request->input('server_setup_started_at');
+        // $company->is_deleted = $request->input('is_deleted', '0');
 
         if ($request->has('password')) {
             $company->password = bcrypt($request->input('password'));
@@ -246,7 +264,7 @@ class CompanyController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy_company(Request $request, $id)
     {
         try {
             $company = Company::findOrFail($id);
@@ -255,6 +273,8 @@ class CompanyController extends Controller
             $deleteSubdomain = $request->input('delete_subdomain') == 1;
             $deleteDatabase = $request->input('delete_database') == 1;
             $deleteProjectDirectory = $request->input('delete_project_directory') == 1;
+            $destroy_company_permanent = $request->input('delete_permanent') == 1;
+            // dd($request, $company);
 
             if (!$deleteFaildServerSetupCompany) {
                 $this->deleteSubdomain($company);
@@ -284,6 +304,10 @@ class CompanyController extends Controller
             $company->is_deleted = 1;
             $company->deleted_at = now();
             $company->save();
+
+            if($destroy_company_permanent){
+                $company->delete();
+            }
 
             return redirect()->route('companies.index')->with('success', "Company deleted successfully");
         } catch (\Exception $e) {

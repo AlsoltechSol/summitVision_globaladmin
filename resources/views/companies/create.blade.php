@@ -16,17 +16,9 @@
         <div class="form-group">
             {{ Form::label('company_name', __('Company Name'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
-                {!! Form::text('company_name', isset($company) ? $company->company_name : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter company name']) !!}
+                {!! Form::text('company_name', isset($company) ? $company->company_name : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter Company Name']) !!}
             </div>
         </div>
-        @if(isset($company))
-        <div class="form-group">
-            {{ Form::label('url', __('Url'), ['class' => 'form-label']) }}
-            <div class="form-icon-user">
-                {!! Form::text('url', isset($company) ? $company->url : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter Url']) !!}
-            </div>
-        </div> 
-        @endif
         <div class="form-group">
             {{ Form::label('mobile', __('Mobile'), ['class' => 'form-label']) }}
             <div class="form-icon-user">
@@ -40,6 +32,68 @@
                 <span class="cursor-pointer toggle-password" onclick="togglePasswordVisibility()">Show</span>
             </div>
         </div>
+        @if(isset($company))
+        <div class="form-group">
+            {{ Form::label('url', __('Url'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('url', isset($company) ? $company->url : null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => 'Enter Url']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('plan', __('Plan'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::number('plan', isset($company) ? $company->plan : null, ['class' => 'form-control', 'placeholder' => 'Enter Plan']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('plan_expire_date', __('Plan Expire Date'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::date('plan_expire_date', isset($company) ? $company->plan_expire_date : null, ['class' => 'form-control', 'placeholder' => 'Enter Plan Expire Date']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('DB_DATABASE', __('DB Database'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('DB_DATABASE', isset($company) ? $company->DB_DATABASE : null, ['class' => 'form-control', 'placeholder' => 'Enter DB Database']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('DB_USERNAME', __('DB Username'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('DB_USERNAME', isset($company) ? $company->DB_USERNAME : null, ['class' => 'form-control', 'placeholder' => 'Enter DB Username']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('DB_HOST', __('DB Host'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('DB_HOST', isset($company) ? $company->DB_HOST : 'localhost:3306', ['class' => 'form-control', 'placeholder' => 'Enter DB Host']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('DB_PASSWORD', __('DB Password'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('DB_PASSWORD', isset($company) ? $company->DB_PASSWORD : '', ['class' => 'form-control', 'placeholder' => 'Enter DB Password']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('sub_domain', __('Sub Domain'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::text('sub_domain', isset($company) ? $company->sub_domain : null, ['class' => 'form-control', 'placeholder' => 'Enter Sub Domain']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('is_verified', __('Is Verified'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::checkbox('is_verified', '1', isset($company) ? $company->is_verified == '1' : false) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ Form::label('server_config_status', __('Server Config Status'), ['class' => 'form-label']) }}
+            <div class="form-icon-user">
+                {!! Form::checkbox('server_config_status', '1', isset($company) ? $company->server_config_status == '1' : false) !!}
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 <div class="modal-footer">
