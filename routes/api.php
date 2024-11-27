@@ -58,7 +58,7 @@ Route::get('/check-company', function(Request $request) {
     $company = Company::whereRaw('lower(company_name) = ?', strtolower($companyName))->first();
 
     if ($company) {
-        return response()->json(['status' => 200, 'message' => "Company found", 'url' => $company->url], 200);
+        return response()->json(['status' => 200, 'message' => "Company found", 'url' => $company->url, 'company_logo' =>  $company->url . '/storage/uploads/logo/2_dark_logo.png'], 200);
     } else {
         return response()->json(['status' => 404, 'message' => "This Company name is not registered with us.", 'url' => null], 404);
     }
