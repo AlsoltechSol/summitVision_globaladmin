@@ -40,14 +40,14 @@ class FailedServerHostingOpsCommand extends Command
         Log::info('Scheduler faild server ops executed at: ' . now());
 
         $companies = Company::where('server_setup_started_at', '<', now()->subMinutes(5))
-<<<<<<< HEAD
+
             ->where('server_config_status', '<>', 1)
-=======
-            ->where(function ($query) {
-                $query->where('server_config_status', '!=', 1)
-                    ->orWhereNull('server_config_status');
-            })
->>>>>>> dcee0fe1beb67c3bb9ddfeff8bdb885af0b3148f
+
+            // ->where(function ($query) {
+            //     $query->where('server_config_status', '!=', 1)
+            //         ->orWhereNull('server_config_status');
+            // })
+
             ->where('is_verified', 1)
             ->get();
         // dd($companies);

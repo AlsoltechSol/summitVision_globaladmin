@@ -50,17 +50,19 @@
         const company = @json($company);
         const companyString = encodeURIComponent(JSON.stringify(company));
         console.log(companyString)
+
         function httpRequests(data, url, company) {
            return new Promise((resolve, reject) => {
                $.ajax({
                    url: "https://summitconnect.sg"+url,
-                   method: "GET",
+                   method: "POST",
                    async: true, 
                    data: {
                        "company": JSON.stringify(company),
                        "data": data,
                    },
                    success: function(response) {
+                       console.log(response)
                        if (response.status == 200) {
                            show_toastr('Success', response?.message, 'success');
                            resolve(response); 
@@ -81,7 +83,7 @@
       
             $.ajax({
                 url: "https://summitconnect.sg/create_subdomain_and_dir_globaladmin",
-                method: "GET",
+                method: "POST",
                 async: false,
                 data: {
                     "_token": "{{ csrf_token() }}",
