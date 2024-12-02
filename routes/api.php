@@ -55,6 +55,7 @@ Route::post('update_company_setup', [RegisterdCompanyController::class, 'update_
 
 Route::get('/check-company', function(Request $request) {
     $companyName = $request->input('company_name'); 
+    // dd($companyName);
     $company = Company::whereRaw('lower(company_name) = ?', strtolower($companyName))->first();
 
     if ($company) {
