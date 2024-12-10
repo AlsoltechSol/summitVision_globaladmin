@@ -128,6 +128,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar/');
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <form action="{{ route('companies.destroy_company', $company->id) }}" method="post" id="delete-form-modal_{{$company->id}}">
+                                                            @csrf
+                                                            @method('POST')
                                                             <p><strong>Company name</strong> {{ $company->company_name }}</p>
                                                             <p style="text-wrap: wrap; font-weight: 600; color: red; font-size: 11px;">
                                                                 Note: This is a live company panel. Deleting it will cause the panel to no longer function.
@@ -136,34 +139,32 @@ $profile = \App\Models\Utility::get_file('uploads/avatar/');
 
                                                             <p>Choose Server Resources to delete:</p>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="1" id="deleteSubdomain_{{$company->id}}">
+                                                                <input class="form-check-input" type="checkbox" name="delete_subdomain" value="0" onchange="this.value = this.checked ? 1 : 0;" id="deleteSubdomain_{{$company->id}}">
                                                                 <label class="form-check-label" for="deleteSubdomain">
                                                                     Delete subdomain
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="1" id="deleteDatabase_{{$company->id}}">
+                                                                <input class="form-check-input" type="checkbox"  name="delete_database" value="0" id="hiddenDeleteDatabase_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;">
                                                                 <label class="form-check-label" for="deleteDatabase">
                                                                     Delete database and username
                                                                 </label>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="1" id="deleteProjectDirectory_{{$company->id}}">
+                                                                <input class="form-check-input" type="checkbox"  name="delete_project_directory" value="0" id="hiddenDeleteProjectDirectory_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;">
                                                                 <label class="form-check-label" for="deleteProjectDirectory">
                                                                     Delete project directory
                                                                 </label>
                                                             </div>
                                                             <p class="mt-3"> Please type "delete" to confirm:</p>
                                                             <input type="text" id="deleteConfirmationInput_{{$company->id}}" class="form-control" placeholder="Type 'delete' to confirm">
-                                                            <form action="{{ route('companies.destroy_company', $company->id) }}" method="post" id="delete-form-modal_{{$company->id}}">
-                                                                @csrf
-                                                                @method('POST')
+                                                           
                                                                 {{-- {!! Form::open(['method' => "POST", 'route' => ['companies.destroy_company', $company->id], 'id' => 'delete-form-modal_' .$company->id]) !!} --}}
-                                                                <input type="hidden" name="delete_subdomain" id="hiddenDeleteSubdomain_{{$company->id}}">
+                                                                <input type="hidden"  id="hiddenDeleteSubdomain_{{$company->id}}">
                                                                 <input type="hidden" name="delete_faild_server_setup_company" value="1">
-                                                                <input type="hidden" name="delete_database" value="0" id="hiddenDeleteDatabase_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;">
-                                                                <input type="hidden" name="delete_project_directory" value="0" id="hiddenDeleteProjectDirectory_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;">
-                                                                <input type="checkbox" value="1" name="delete_permanent" value="0" id="delete_permanent_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;"> <small>Skip trash and delete this company permanently.</small>
+                                                                {{-- <input type="hidden" name="delete_database" value="0" id="hiddenDeleteDatabase_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;"> --}}
+                                                                {{-- <input type="hidden" name="delete_project_directory" value="0" id="hiddenDeleteProjectDirectory_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;"> --}}
+                                                                <input type="checkbox" name="delete_permanent" value="0" id="delete_permanent_{{$company->id}}" onchange="this.value = this.checked ? 1 : 0;"> <small>Skip trash and delete this company permanently.</small>
                                                                 {{-- {!! Form::close() !!} --}}
                                                             </form>
                                                         </div>

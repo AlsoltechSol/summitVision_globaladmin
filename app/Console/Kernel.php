@@ -14,6 +14,13 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+    protected $commands = [
+        \App\Console\Commands\DeleteSubdomain::class,
+        \App\Console\Commands\DeleteDatabase::class,
+        \App\Console\Commands\DeleteFileOpTrash::class, //
+        \App\Console\Commands\DeleteUsername::class,
+    ];
+    
     protected function schedule(Schedule $schedule)
     {
         Log::info('Scheduler executed at: ' . now());

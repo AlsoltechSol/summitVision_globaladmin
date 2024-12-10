@@ -141,7 +141,7 @@ class FailedServerHostingOpsCommand extends Command
             'company' => json_encode($company)
         ];
 
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/create_subdomain_and_dir', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/create_subdomain_and_dir', $req);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
@@ -159,7 +159,7 @@ class FailedServerHostingOpsCommand extends Command
             'company' => json_encode($company)
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/cpannel_create_database_put_data_cron', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/cpannel_create_database_put_data_cron', $req);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
@@ -180,7 +180,7 @@ class FailedServerHostingOpsCommand extends Command
             ]
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/create_db_user', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/create_db_user', $req);
         $responseData = $response->json();
         // dd($responseData);
         // echo json_encode($responseData);
@@ -202,7 +202,7 @@ class FailedServerHostingOpsCommand extends Command
             ]
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/set_privileges_on_database', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/set_privileges_on_database', $req);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
@@ -223,7 +223,7 @@ class FailedServerHostingOpsCommand extends Command
             ]
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/importSQLFile', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/importSQLFile', $req);
         $responseData = $response->json();
         // dd($responseData);
         // echo json_encode($responseData);
@@ -245,7 +245,7 @@ class FailedServerHostingOpsCommand extends Command
             ]
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/fileop', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/fileop', $req);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {
@@ -266,7 +266,7 @@ class FailedServerHostingOpsCommand extends Command
             ]
         ];
         // dd($req);
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/upload_env', $req);
+        $response = Http::post(env('PUBLIC_INSTENCE_URL') . '/upload_env', $req);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {

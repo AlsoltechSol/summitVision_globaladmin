@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteDatabaseJob;
+use App\Jobs\DeleteSubdomainJob;
+use App\Jobs\DeleteUsernameJob;
+use App\Jobs\FileopTrashJob;
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Models\CompanyRecord;
 use App\Models\PlanRequest;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -264,6 +270,81 @@ class CompanyController extends Controller
         }
     }
 
+    // public function destroy_company(Request $request, $id)
+    // {
+    //     try {
+    //         $company = Company::findOrFail($id);
+
+    //         $deleteFaildServerSetupCompany = $request->has('delete_faild_server_setup_company');
+    //         $deleteSubdomain = $request->input('delete_subdomain') == 1;
+    //         $deleteDatabase = $request->input('delete_database') == 1;
+    //         $deleteProjectDirectory = $request->input('delete_project_directory') == 1;
+    //         $destroy_company_permanent = $request->input('delete_permanent') == 1;
+
+    //         // dd($request);
+    //         if (!$deleteFaildServerSetupCompany) {
+    //             \Log::info(['message' => 'deleting subdomain']);
+    //             DeleteSubdomainJob::dispatch($company->id)->onQueue('default');
+
+    //             \Log::info(['message' => 'Dispatching DeleteDatabaseJob']);
+    //             DeleteDatabaseJob::dispatch($company->id)->onQueue('default');
+
+    //             \Log::info(['message' => 'Dispatching DeleteUsernameJob']);
+    //             DeleteUsernameJob::dispatch($company->id)->onQueue('default');
+
+    //             \Log::info(['message' => 'Dispatching FileopTrashJob']);
+    //             FileopTrashJob::dispatch($company->id)->onQueue('default');
+
+    //             $company->is_deleted = 1;
+    //             $company->deleted_at = now();
+    //             $company->save();
+    //             // dd($company);
+
+    //             if ($destroy_company_permanent) {
+    //                 $companyData = $company->toArray();
+    //                 $uniqueKey = ['id' => $company->id];
+    //                 CompanyRecord::updateOrCreate($uniqueKey, $companyData);
+    //                 $company->delete();
+    //             }
+
+    //             // Artisan::call('queue:work');
+    //             return redirect()->route('companies.index')->with('success', "Company deleted successfully");
+    //         }
+
+    //         if ($deleteSubdomain) {
+    //             DeleteSubdomainJob::dispatch($company->id)->onQueue('default');
+    //         }
+
+    //         if ($deleteDatabase) {
+    //             DeleteDatabaseJob::dispatch($company->id)->onQueue('default');
+    //             DeleteUsernameJob::dispatch($company->id)->onQueue('default');
+    //         }
+
+    //         if ($deleteProjectDirectory) {
+    //             // sleep(5);
+    //             FileopTrashJob::dispatch($company->id)->onQueue('default');
+    //         }
+
+    //         $company->is_deleted = 1;
+    //         $company->deleted_at = now();
+    //         $company->save();
+
+    //         if ($destroy_company_permanent) {
+    //             $companyData = $company->toArray();
+    //             $uniqueKey = ['id' => $company->id];
+    //             CompanyRecord::updateOrCreate($uniqueKey, $companyData);
+    //             $company->delete();
+    //         }
+
+    //         // Artisan::call('queue:work');
+    //         return redirect()->route('companies.index')->with('success', "Company deleted successfully");
+    //     } catch (\Exception $e) {
+    //         // dd($e);
+    //         return redirect()->route('companies.index')->with('error', "Internal Server Error. Unable to delete the company.");
+    //     }
+    // }
+
+
     public function destroy_company(Request $request, $id)
     {
         try {
@@ -274,48 +355,64 @@ class CompanyController extends Controller
             $deleteDatabase = $request->input('delete_database') == 1;
             $deleteProjectDirectory = $request->input('delete_project_directory') == 1;
             $destroy_company_permanent = $request->input('delete_permanent') == 1;
-            // dd($request, $company);
 
+            // dd($request);
             if (!$deleteFaildServerSetupCompany) {
-                $this->deleteSubdomain($company);
-                $this->deleteDatabase($company);
-                $this->deleteUsername($company);
-                $this->fileopTrash($company);
+                \Log::info(['message' => 'deleting subdomain']);
+                Artisan::queue('company:delete-subdomain', ['companyId' => $company->id]);
+                Artisan::queue('company:delete-database', ['companyId' => $company->id]);
+                Artisan::queue('company:delete-username', ['companyId' => $company->id]);
+                Artisan::queue('company:fileop-trash', ['companyId' => $company->id]);
+
 
                 $company->is_deleted = 1;
                 $company->deleted_at = now();
                 $company->save();
                 // dd($company);
+
+                if ($destroy_company_permanent) {
+                    $companyData = $company->toArray();
+                    $uniqueKey = ['id' => $company->id];
+                    CompanyRecord::updateOrCreate($uniqueKey, $companyData);
+                    $company->delete();
+                }
+
+                // Artisan::call('queue:work');
                 return redirect()->route('companies.index')->with('success', "Company deleted successfully");
             }
 
             if ($deleteSubdomain) {
-                $this->deleteSubdomain($company);
+                // DeleteSubdomainJob::dispatch($company->id)->onQueue('default');
+                Artisan::queue('company:delete-subdomain', ['companyId' => $company->id]);
             }
 
             if ($deleteDatabase) {
-                $this->deleteDatabase($company);
-                $this->deleteUsername($company);
+                Artisan::queue('company:delete-database', ['companyId' => $company->id]);
+                Artisan::queue('company:delete-username', ['companyId' => $company->id]);
             }
 
             if ($deleteProjectDirectory) {
-                $this->fileopTrash($company);
+                Artisan::queue('company:fileop-trash', ['companyId' => $company->id]);
             }
+
             $company->is_deleted = 1;
             $company->deleted_at = now();
             $company->save();
 
-            if($destroy_company_permanent){
+            if ($destroy_company_permanent) {
+                $companyData = $company->toArray();
+                $uniqueKey = ['id' => $company->id];
+                CompanyRecord::updateOrCreate($uniqueKey, $companyData);
                 $company->delete();
             }
 
+            // Artisan::call('queue:work');
             return redirect()->route('companies.index')->with('success', "Company deleted successfully");
         } catch (\Exception $e) {
+            // dd($e);
             return redirect()->route('companies.index')->with('error', "Internal Server Error. Unable to delete the company.");
         }
     }
-
-
     private function deleteSubdomain($company)
     {
 
@@ -358,7 +455,8 @@ class CompanyController extends Controller
 
     private function fileopTrash($company)
     {
-        $response = Http::withOptions(['verify' => false])->get(env('PUBLIC_INSTENCE_URL') . '/file_op_trash', $company);
+        // dd('');
+        $response = Http::get(env('PUBLIC_INSTENCE_URL') . '/file_op_trash', ['sub_domain' => $company->sub_domain]);
         $responseData = $response->json();
         // dd($responseData);
         if ($responseData['status'] !== 200) {

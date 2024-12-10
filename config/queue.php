@@ -36,9 +36,9 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table' => 'jobs',
+            'table' => 'laravel_jobs',
             'queue' => 'default',
-            'retry_after' => 90,
+            'retry_after' => 300,
             'after_commit' => false,
         ],
 
