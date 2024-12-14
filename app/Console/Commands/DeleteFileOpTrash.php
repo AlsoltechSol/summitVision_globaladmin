@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Company;
 use App\Models\CompanyRecord;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -30,12 +31,24 @@ class DeleteFileOpTrash extends Command
     public function handle()
     {
         try {
+
+            \Log::info("Executing command delete fileop-trash");
             $companyId = $this->argument('companyId');
             
             $company = CompanyRecord::find($companyId);
+            \Log::info("CompanyRecord model", ["company" => $company]);
 
             if ($company) {
                 $this->fileopTrash($company);
+            }
+
+            if(!$company){
+                $company = Company::find($companyId);
+                \Log::info("Company model", ["company" => $company]);
+
+                if ($company) {
+                    $this->fileopTrash($company);
+                }
             }
         } catch (\Exception $e) {
             \Log::error(['message' => 'FileopTrash job failed', 'error' => $e->getMessage()]);

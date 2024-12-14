@@ -359,41 +359,39 @@ class CompanyController extends Controller
             // dd($request);
             if (!$deleteFaildServerSetupCompany) {
                 \Log::info(['message' => 'deleting subdomain']);
-                Artisan::queue('company:delete-subdomain', ['companyId' => $company->id]);
-                Artisan::queue('company:delete-database', ['companyId' => $company->id]);
-                Artisan::queue('company:delete-username', ['companyId' => $company->id]);
-                Artisan::queue('company:fileop-trash', ['companyId' => $company->id]);
-
-
+            
+                shell_exec("(php artisan company:delete-subdomain {$company->id} > /dev/null 2>&1 &) && sleep 1");
+                shell_exec("(php artisan company:delete-database {$company->id} > /dev/null 2>&1 &) && sleep 1");
+                shell_exec("(php artisan company:delete-username {$company->id} > /dev/null 2>&1 &) && sleep 1");
+                shell_exec("(php artisan company:fileop-trash {$company->id} > /dev/null 2>&1 &) && sleep 1");
+            
                 $company->is_deleted = 1;
                 $company->deleted_at = now();
                 $company->save();
-                // dd($company);
-
+            
                 if ($destroy_company_permanent) {
                     $companyData = $company->toArray();
                     $uniqueKey = ['id' => $company->id];
                     CompanyRecord::updateOrCreate($uniqueKey, $companyData);
                     $company->delete();
                 }
-
-                // Artisan::call('queue:work');
+            
                 return redirect()->route('companies.index')->with('success', "Company deleted successfully");
             }
-
+            
             if ($deleteSubdomain) {
-                // DeleteSubdomainJob::dispatch($company->id)->onQueue('default');
-                Artisan::queue('company:delete-subdomain', ['companyId' => $company->id]);
+                shell_exec("(php artisan company:delete-subdomain {$company->id} > /dev/null 2>&1 &) && sleep 1");
             }
-
+            
             if ($deleteDatabase) {
-                Artisan::queue('company:delete-database', ['companyId' => $company->id]);
-                Artisan::queue('company:delete-username', ['companyId' => $company->id]);
+                shell_exec("(php artisan company:delete-database {$company->id} > /dev/null 2>&1 &) && sleep 1");
+                shell_exec("(php artisan company:delete-username {$company->id} > /dev/null 2>&1 &) && sleep 1");
             }
-
+            
             if ($deleteProjectDirectory) {
-                Artisan::queue('company:fileop-trash', ['companyId' => $company->id]);
+                shell_exec("(php artisan company:fileop-trash {$company->id} > /dev/null 2>&1 &) && sleep 1");
             }
+            
 
             $company->is_deleted = 1;
             $company->deleted_at = now();

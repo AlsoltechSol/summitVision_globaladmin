@@ -46,10 +46,15 @@
 @push('script-page')
 <script>
     console.log('first')
+    
     $(document).ready(function() {
         const company = @json($company);
         const companyString = encodeURIComponent(JSON.stringify(company));
         console.log(companyString)
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
 
         function httpRequests(data, url, company) {
            return new Promise((resolve, reject) => {
@@ -104,7 +109,7 @@
                                 show_toastr('Success', cpannel_create_database_put_data_response.message, 'success');
                                 obj.dbname = cpannel_create_database_put_data_response.dbname;
                                 console.log(obj)
-                                return httpRequests(obj, '/create_db_user', cpannel_create_database_put_data_response.company);
+                                return sleep(1000).then(() => httpRequests(obj, '/create_db_user', cpannel_create_database_put_data_response.company));
                             } else {
                                 show_toastr('Error', cpannel_create_database_put_data_response.message, 'error');
                                 return Promise.reject(new Error("Create Database failed."));
@@ -112,7 +117,7 @@
                         }).then(create_user_response => {
                             if (create_user_response.status === 200) {
                                 show_toastr('Success', create_user_response.message, 'success');
-                                return httpRequests(obj, '/set_privileges_on_database', create_user_response.company);
+                                return sleep(1000).then(() => httpRequests(obj, '/set_privileges_on_database', create_user_response.company));
                             } else {
                                 show_toastr('Error', create_user_response.message, 'error');
                                 return Promise.reject(new Error("Create user request failed."));
@@ -120,16 +125,16 @@
                         }).then(set_privileges_on_database_response => {
                             if (set_privileges_on_database_response.status === 200) {
                                 show_toastr('Success', set_privileges_on_database_response.message, 'success');
-                                return httpRequests(obj, '/importSQLFile', set_privileges_on_database_response.company);
+                                return sleep(1000).then(() => httpRequests(obj, '/importSQLFile', set_privileges_on_database_response.company));
                             } else {
                                 show_toastr('Error', set_privileges_on_database_response.message, 'error');
-                                return Promise.reject(new Error("Set privileges on database request failed."));
+                                return  Promise.reject(new Error("Set privileges on database request failed."));
                             }
                         }).then(importSQLFile_response => {
                             
                             if (importSQLFile_response.status === 200) {
                                 show_toastr('Success', importSQLFile_response.message, 'success');
-                                return httpRequests(obj, '/fileop', importSQLFile_response.company);
+                                return sleep(1000).then(() => httpRequests(obj, '/fileop', importSQLFile_response.company));
                             }else{
                                 show_toastr('Error', importSQLFile_response.message, 'error');
                                 return Promise.reject(new Error("Failed to set default data on database."));
@@ -138,7 +143,7 @@
                             
                             if (fileop_response.status === 200) {
                                 show_toastr('Success', fileop_response.message, 'success');
-                                return httpRequests(obj, '/upload_env', fileop_response.company);
+                                return sleep(1000).then(() => httpRequests(obj, '/upload_env', fileop_response.company));
                             }else{
                                 show_toastr('Error', fileop_response.message, 'error');
                                 return Promise.reject(new Error("Failed to set default data on database."));
