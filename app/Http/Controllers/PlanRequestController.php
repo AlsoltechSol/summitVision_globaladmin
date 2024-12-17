@@ -126,6 +126,8 @@ class PlanRequestController extends Controller
         if (Auth::user()->type == 'super admin' || Gate::check('Manage Plan Request')) {
             
             $plan_request = PlanRequest::find($id);
+
+            // dd($plan_request);
             $company = Company::where('id', $plan_request->company_id)->first();
 
             if (!empty($plan_request) && $company) {
@@ -133,10 +135,12 @@ class PlanRequestController extends Controller
 
                 if ($response == 1) {
 
+                    // dd(Plan::all());
                     $plan       = Plan::find($plan_request->plan_id);
                     $price      = $plan->price;
 
-                    if (!empty($plan)) {
+                    // dd($plan);
+                    if ($plan) {
                         $orderID = strtoupper(str_replace('.', '', uniqid('', true)));
                         $new_order = Order::create([
                             'order_id' => $orderID,
@@ -164,7 +168,7 @@ class PlanRequestController extends Controller
                             ]);
 
                             $put_accept_data = $put_accept_data->json();
-                            // dd($put_accept_data);
+                            dd($put_accept_data);
                             if ($put_accept_data && $put_accept_data['status'] == 200) {
                                 $plan_request->delete();
                                 DB::commit();
