@@ -166,9 +166,9 @@ class PlanRequestController extends Controller
                             $put_accept_data = Http::post($company->url . '/api/plan_request_accept_or_reject/' . $id . '/' . $response, [
                                 'new_order' => json_encode($new_order)
                             ]);
-
                             $put_accept_data = $put_accept_data->json();
-                            dd($put_accept_data);
+                            // dd($put_accept_data);
+                        
                             if ($put_accept_data && $put_accept_data['status'] == 200) {
                                 $plan_request->delete();
                                 DB::commit();
