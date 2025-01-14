@@ -15,7 +15,7 @@ class TestimonialsController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Landing Page')) {
             $settings = LandingPageSetting::settings();
             $testimonials = json_decode($settings['testimonials'], true) ?? [];
             return view('landingpage::landingpage.testimonials.index',compact('settings','testimonials'));

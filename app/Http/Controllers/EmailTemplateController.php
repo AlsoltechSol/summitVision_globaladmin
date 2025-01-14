@@ -143,7 +143,7 @@ class EmailTemplateController extends Controller
     // Used For View Email Template Language Wise
     public function manageEmailLang($id, $lang = 'en')
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Email Templates')) {
             $languages         = Utility::languages();
             $emailTemplate     = EmailTemplate::first();
             // $currEmailTempLang = EmailTemplateLang::where('lang', $lang)->first();
@@ -152,7 +152,7 @@ class EmailTemplateController extends Controller
                 $currEmailTempLang       = EmailTemplateLang::where('parent_id', '=', $id)->where('lang', 'en')->first();
                 $currEmailTempLang->lang = $lang;
             }
-            if (\Auth::user()->type == 'super admin') {
+            if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Email Templates')) {
                 $emailTemplate     = EmailTemplate::where('id', '=', $id)->first();
             } else {
                 $settings         = Utility::settings();

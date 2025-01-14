@@ -15,7 +15,7 @@ class DiscoverController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Landing Page')) {
             $settings = LandingPageSetting::settings();
             $discover_of_features = json_decode($settings['discover_of_features'], true) ?? [];
             return view('landingpage::landingpage.discover.index', compact('settings', 'discover_of_features'));

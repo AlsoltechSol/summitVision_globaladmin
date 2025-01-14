@@ -15,7 +15,7 @@ class PricingPlanController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Landing Page')) {
             $settings = LandingPageSetting::settings();
             return view('landingpage::landingpage.pricing_plan', compact('settings'));
         } else {

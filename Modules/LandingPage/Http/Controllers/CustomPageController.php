@@ -15,7 +15,7 @@ class CustomPageController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Landing Page')) {
             $settings = LandingPageSetting::settings();
             $pages = json_decode($settings['menubar_page'], true);
             return view('landingpage::landingpage.menubar.index', compact('pages', 'settings'));

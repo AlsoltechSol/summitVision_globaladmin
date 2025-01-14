@@ -554,9 +554,9 @@ $emailTemplate = App\Models\EmailTemplate::first();
                 @endif
 
                 @if (\Auth::user()->type == 'super admin' || Gate::check('Manage Email Templates'))
-                <li class="dash-item {{ Request::route()->getName() == 'email_template.show' || Request::segment(1) == 'email_template_lang' || Request::route()->getName() == 'manageemail.lang' ? 'active' : '' }}">
+                {{-- <li class="dash-item {{ Request::route()->getName() == 'email_template.show' || Request::segment(1) == 'email_template_lang' || Request::route()->getName() == 'manageemail.lang' ? 'active' : '' }}">
                     <a href="{{ route('manage.email.language', [$emailTemplate->id, \Auth::user()->lang]) }}" class="dash-link"><span class="dash-micon"><i class="ti ti-template"></i></span><span class="dash-mtext">{{ __('Email Templates') }}</span></a>
-                </li>
+                </li> --}}
                 @endif
                 <!--report-->
                 <!-- @if (Gate::check('Manage Report'))

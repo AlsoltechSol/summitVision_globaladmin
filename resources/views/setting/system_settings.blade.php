@@ -3015,12 +3015,12 @@
                             <div class="row">
                                 <div id="csv_file" class="col-md-6">
                                     @if (isset($settings['cookie_logging']) && $settings['cookie_logging'] == 'on')
-                                        <label for="file"
+                                        {{-- <label for="file"
                                             class="form-label">{{ __('Download cookie accepted data') }}</label>
                                         <a href="{{ asset(Storage::url('uploads/sample')) . '/data.csv' }}"
                                             class="mr-2 btn btn-primary ">
                                             <i class="ti ti-download"></i>
-                                        </a>
+                                        </a> --}}
                                     @endif
                                 </div>
 

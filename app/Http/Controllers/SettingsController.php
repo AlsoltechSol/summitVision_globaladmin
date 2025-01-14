@@ -58,7 +58,7 @@ class SettingsController extends Controller
         $noclangName = \App\Models\Languages::where('code', $noclang)->first();
 
         $user = \Auth::user();
-        if (\Auth::user()->type == 'company' || \Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'company' || \Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Settings')) {
             if ($user->type == 'super admin') {
                 $settings              = Utility::settings();
                 $admin_payment_setting = Utility::getAdminPaymentSetting();

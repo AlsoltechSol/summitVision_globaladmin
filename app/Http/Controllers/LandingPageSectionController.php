@@ -9,7 +9,8 @@ class LandingPageSectionController extends Controller
 {
     public function index()
     {     
-        if(\Auth::user()->type == 'super admin')
+        // dd('', \Auth::user()->can('Manage Landing Page'));
+        if(\Auth::user()->type == 'super admin' || \Auth::user()->can('Manage Landing Page'))
         {
             $get_section = LandingPageSection::orderBy('section_order', 'ASC')->get();
 
